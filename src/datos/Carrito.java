@@ -32,4 +32,7 @@ public class Carrito {
         }
     }
     
+    public void vaciarCarrito(){
+        this.listaProductos.clear();
+    }
 }

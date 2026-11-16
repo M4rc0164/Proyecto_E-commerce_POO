@@ -1,7 +1,12 @@
 package datos;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Random;
+import usuarios.Cliente;
 
 /**
  *
@@ -10,12 +15,73 @@ import java.util.HashMap;
 
 public class Pedido {
     
-    private HashMap listaProductos;
+    private HashMap<Integer, Producto> listaProductos;
     private LocalDate fechaPedido;
-    private float monto;
+    private float monto = 0;
     private Domicilio domicilio;
     private MedioPago mediopago;
     private LocalDate fechaEntrega;
     
+    public Pedido(Cliente cliente, MedioPago mediopago, HashMap<Integer,Producto> listaproductos){
+        this.listaProductos = listaproductos;
+        this.fechaPedido = LocalDate.now();
+        for(int i=0; i<listaproductos.size(); i++){
+            this.monto += listaproductos.get(i).getPrecio();
+        }
+        this.domicilio = Cliente.getDomicilio();
+        this.mediopago = mediopago;
+        Random aleatorio = new Random();
+        this.fechaEntrega = LocalDate.now().plusDays(aleatorio.nextInt(1,8));
+    }
     
+    public void imprimirPedido(Cliente cliente){
+        try {
+            int numpedido = cliente.getListaPedido().indexOf(this) + 1;
+            File ticket = new File("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
+            ticket.createNewFile();
+            FileWriter escritura = new FileWriter("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
+            escritura.write("Pedido "+ numpedido + "\n");
+            escritura.write("Productos: \n");
+            for(int i=0; i<this.listaProductos.size(); i++){
+                //Considerando nombres muy largos
+                if(this.listaProductos.get(i).getNombre().length() > 30){
+                    //Considerando si el nombre tiene espacios
+                    if(this.listaProductos.get(i).getNombre().indexOf(" ") != - 1){
+                        int indice = this.listaProductos.get(i).getNombre().indexOf(" ");
+                        int tamaño = 30 - this.listaProductos.get(i).getNombre().substring(0, indice +1).length();
+                        escritura.write((i+1) + ". " +this.listaProductos.get(i).getNombre().substring(0, indice +1));
+                        for(int j = 0; j<tamaño; j++){
+                            escritura.write(" ");
+                        }
+                        escritura.write(" $ "+ this.listaProductos.get(i).getPrecio()+ "\n");
+                        escritura.write("   "+this.listaProductos.get(i).getNombre().substring(indice +1, this.listaProductos.get(i).getNombre().length()) + "\n");
+                    }
+                    else{
+                        escritura.write((i+1)+ ". "+this.listaProductos.get(i).getNombre().substring(0, 31) + " $" +this.listaProductos.get(i).getPrecio()+ "\n");
+                        escritura.write("   "+ this.listaProductos.get(i).getNombre().substring(31, this.listaProductos.get(i).getNombre().length()) + "\n");
+                    }
+                }
+                else{
+                    escritura.write((i+1)+ ". " + this.listaProductos.get(i).getNombre()+ " $" + this.listaProductos.get(i).getNombre()+ "\n");
+                }
+            }
+            escritura.write("Monto total                       $"+ this.monto+ "\n");
+            escritura.write("Fecha de pedido: "+ this.fechaPedido+ "\n");
+            escritura.write("Fecha de entrega: "+ this.fechaEntrega+ "\n");
+            escritura.write("Domicilio: \n");
+            escritura.write("Calle: "+ this.domicilio.getCalle()+ "\n");
+            escritura.write("Colonia: "+ this.domicilio.getColonia()+ "\n");
+            escritura.write("Teléfono: "+ this.domicilio.getTelefono()+ "\n");
+            escritura.write("Medio de pago: "+ this.mediopago.getAlias()+ "\n");
+            if(mediopago.getAlias().equals("Tarjeta")){
+                escritura.write("**** **** **** "+ this.mediopago.getAlias().substring(16,this.mediopago.getAlias().size())+ "\n");
+            }
+            else if(mediopago.getAlias().equals("Paypal")){
+                escritura.write("Correo: "+ this.mediopago.getCorreo() + "\n");
+            }
+            escritura.close();
+        } catch (IOException ex) {
+            System.out.println("Ocurrió un error");
+        }
+    }
 }

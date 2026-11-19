@@ -55,4 +55,32 @@ public class BaseDatos {
             usuarios.add(nuevoUsuario);
         }
     }
+    
+    //para imprimir los productos
+    public void imprimirProductos(){
+        if(this.inventario.isEmpty()){
+            System.out.println("No hay productos registrados");
+            return;
+        }
+        
+        for(Producto p : this.inventario){
+            System.out.println("***");
+            System.out.println("Id: "+p.getId());
+            System.out.println("Nombre: "+p.getNombre());
+            System.out.println("Precio: "+p.getPrecio());
+            System.out.println("Categoría: "+p.getCategoria());  
+        }
+    }
+    
+    //para buscar los productos 
+    public Producto buscarProducto(String id){
+        for(Producto p : this.inventario){
+            if(p.getId().equals(id)){
+                return p;
+            }
+        }
+        
+        return null;
+    }
+    
 }

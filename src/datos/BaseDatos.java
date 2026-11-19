@@ -55,6 +55,18 @@ public class BaseDatos {
             usuarios.add(nuevoUsuario);
         }
     }
+
+    //para buscar usuarios
+    public Usuario buscarUsuario(String user){
+        for(Usuario u: this.usuarios){
+            if(u.getUser().equals(user)){
+                return u;
+            }
+        }
+        
+        return null;
+    }
+    
     
     //para imprimir los productos
     public void imprimirProductos(){

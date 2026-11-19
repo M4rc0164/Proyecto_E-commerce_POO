@@ -4,14 +4,21 @@
  */
 package usuarios;
 
+import datos.*;
+
 /**
  *
  * @author EdelM
  */
 public class Cliente extends Usuario{
-
+    Carrito carrito;
+    
     public Cliente(String user, String nombre, String password) {
         super(user, nombre, password);
+    }
+
+    public Carrito getCarrito() {
+        return carrito;
     }
     
     

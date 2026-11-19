@@ -45,8 +45,8 @@ public class BaseDatos {
     public void agregarUsuario(Usuario nuevoUsuario){
         boolean seEncuentra = false;
         for (Usuario i : usuarios) {
-            if (i.getNombre().equals(nuevoUsuario.getNombre())) {
-                System.out.println(nuevoUsuario.getNombre() + " ya se encuentra registrado");
+            if (i.getUser().equals(nuevoUsuario.getUser())) {
+                System.out.println(nuevoUsuario.getUser()+ " ya se encuentra registrado");
                 seEncuentra = true;
                 break;
             }

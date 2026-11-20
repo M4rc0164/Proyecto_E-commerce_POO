@@ -1,6 +1,9 @@
 package principal;
 
+import datos.*;
 import java.util.Scanner;
+import usuarios.*;
+
 
 /**
  * @author marco
@@ -37,5 +40,63 @@ public class Principal {
         } while (confirmacion != 's' && confirmacion != 'S');
 
     }
-
+    
+    public void registrarCliente(){
+        BaseDatos baseDatos = BaseDatos.getBaseDatos();
+        String user, contrasena, nombre;
+        Usuario usuario;
+        
+        Scanner lector = new Scanner(System.in);
+        
+        System.out.println("Ingresa el usuario con el que te vas a registrar:");
+        user = lector.nextLine().trim();
+        
+        usuario = baseDatos.buscarUsuario(user);
+        
+        if(usuario != null){
+            System.out.println("Ya existe el usuario, intentalo de nuevo");
+            return;
+        }
+        
+        System.out.println("Ingresa tu nombre: ");
+        nombre= lector.nextLine().trim();
+        
+        System.out.print("Ingresa tu contraseña: ");
+        contrasena = lector.nextLine().trim();
+        
+        baseDatos.agregarUsuario(new Cliente(user, nombre, contrasena));
+        System.out.println("Usuario registrado correctamente");
+        
+    }
+    
+    
+    public static Usuario iniciarSesion(){    
+        BaseDatos baseDatos = BaseDatos.getBaseDatos();
+        String user, contrasena;
+        Usuario usuario;
+        
+        Scanner lector = new Scanner(System.in);
+        
+        System.out.print("Ingresa tu usuario: ");
+        user = lector.nextLine().trim();
+        usuario = baseDatos.buscarUsuario(user);
+        
+        if(usuario == null){
+            System.out.println("No existe el usuario");
+            return null;
+        }
+        
+        System.out.print("Ingresa tu contraseña: ");
+        contrasena = lector.nextLine().trim();
+        
+        if(usuario.validarPassword(contrasena)){
+            System.out.println("Contraseña correcta");
+        }else{
+            System.out.println("Contraseña incorrecta, intentalo de nuevo");
+            return null;
+        }
+        
+        System.out.println("Sesion iniciada correctamente");
+        return usuario;
+    }
 }

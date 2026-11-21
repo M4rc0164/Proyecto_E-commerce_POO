@@ -9,7 +9,6 @@ import usuarios.*;
  * @author marco
  */
 public class Principal {
-    MenuSistema menuSistema=new MenuSistema();
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int opt1 = 0;

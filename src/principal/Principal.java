@@ -63,7 +63,19 @@ public class Principal {
         
         System.out.print("Ingresa tu contraseña: ");
         contrasena = lector.nextLine().trim();
-        
+        int opcion=0;
+        System.out.println("Registrar forma de pago");
+        System.out.println("1. Paypal\n2.Tarjeta de credito");
+        opcion=lector.nextInt();
+        switch(opcion){
+            case 1:
+                System.out.println("Favor de ingresar un correo electronico");
+                String correoElectronico=lector.next();
+                System.out.println("Favor de ingresar su contraseña");
+                String contraseña=lector.next();
+                Paypal paypal=new Paypal(correoElectronico, contraseña, user);
+                break;
+        } 
         baseDatos.agregarUsuario(new Cliente(user, nombre, contrasena));
         System.out.println("Usuario registrado correctamente");
         
@@ -93,19 +105,6 @@ public class Principal {
             System.out.println("Contraseña incorrecta, intentalo de nuevo");
             return null;
         }
-        
-        int opcion=0;
-        System.out.println("Registrar forma de pago");
-        System.out.println("1. Paypal\n2.Tarjeta de credito");
-        opcion=lector.nextInt();
-        switch(opcion){
-            case 1:
-                System.out.println("Favor de ingresar un correo electronico");
-                String correoElectronico=lector.next();
-                System.out.println("Favor de ingresar su contraseña");
-                String contraseña=lector.next();
-                break;
-        } 
         
         System.out.println("Sesion iniciada correctamente");
         return usuario;

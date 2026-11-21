@@ -1,4 +1,4 @@
-package datos;
+package Pagos;
 /**
  *
  * @author Velazquez De Jesus Dante Yabe

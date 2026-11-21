@@ -27,6 +27,7 @@ public class Principal {
                 case 1:
                     break;
                 case 2:
+                    registrarCliente();
                     break;
                     
                 case 3:

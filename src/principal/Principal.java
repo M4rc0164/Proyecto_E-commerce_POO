@@ -41,7 +41,7 @@ public class Principal {
 
     }
     
-    public void registrarCliente(){
+    public static void registrarCliente(){
         BaseDatos baseDatos = BaseDatos.getBaseDatos();
         String user, contrasena, nombre;
         Usuario usuario;

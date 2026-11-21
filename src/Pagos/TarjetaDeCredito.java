@@ -9,5 +9,29 @@ package Pagos;
  * @author dell2
  */
 public class TarjetaDeCredito {
+    private String numeroDeTarjetaDeCredito;
+    private String NIP;
+
+    public TarjetaDeCredito(String numeroDeTarjetaDeCredito, String NIP) {
+        this.numeroDeTarjetaDeCredito = numeroDeTarjetaDeCredito;
+        this.NIP = NIP;
+    }
+
+    public String getNumeroDeTarjetaDeCredito() {
+        return numeroDeTarjetaDeCredito;
+    }
+
+    public void setNumeroDeTarjetaDeCredito(String numeroDeTarjetaDeCredito) {
+        this.numeroDeTarjetaDeCredito = numeroDeTarjetaDeCredito;
+    }
+
+    public String getNIP() {
+        return NIP;
+    }
+
+    public void setNIP(String NIP) {
+        this.NIP = NIP;
+    }
+    
     
 }

@@ -104,7 +104,6 @@ public class Principal {
                 String correoElectronico=lector.next();
                 System.out.println("Favor de ingresar su contraseña");
                 String contraseña=lector.next();
-                Paypal paypal=new Paypal(correoElectronico, contraseña);
                 break;
         } 
         

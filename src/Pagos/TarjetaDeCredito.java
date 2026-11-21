@@ -1,20 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Pagos;
 
 /**
  *
- * @author dell2
+ * @author Velazquez De Jesus Dante Yabe
  */
-public class TarjetaDeCredito {
+public class TarjetaDeCredito extends MedioDePago{
     private String numeroDeTarjetaDeCredito;
     private String NIP;
 
-    public TarjetaDeCredito(String numeroDeTarjetaDeCredito, String NIP) {
-        this.numeroDeTarjetaDeCredito = numeroDeTarjetaDeCredito;
-        this.NIP = NIP;
+    public TarjetaDeCredito(String alias, String numeroDeTarjetaDeCredito, String NIP) {
+        this.numeroDeTarjetaDeCredito=numeroDeTarjetaDeCredito;
+        this.NIP=NIP;
+        super(alias);
     }
 
     public String getNumeroDeTarjetaDeCredito() {
@@ -31,6 +28,16 @@ public class TarjetaDeCredito {
 
     public void setNIP(String NIP) {
         this.NIP = NIP;
+    }
+
+    @Override
+    public void confirmarPago() {
+        System.out.println("Confirmando pago");
+        if(this.numeroDeTarjetaDeCredito!=null&&this.NIP!=null&&this.getAlias()!=null){
+            System.out.println("Pago confirmado");
+        }else{
+            System.out.println("Faltan datos para realizar la compra");
+        }
     }
     
     

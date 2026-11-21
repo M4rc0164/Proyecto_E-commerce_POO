@@ -1,18 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Pagos;
 
 /**
  *
- * @author dell2
+ * @author Velazquez De Jesus Dante Yabe
  */
-public class Paypal {
+public class Paypal extends MedioDePago{
     private String correoElectronico;
     private String contraseña;
 
-    public Paypal(String correoElectronico, String contraseña) {
+    public Paypal(String correoElectronico, String contraseña, String alias) {
+        super(alias);
         this.correoElectronico = correoElectronico;
         this.contraseña = contraseña;
     }
@@ -31,6 +28,16 @@ public class Paypal {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    @Override
+    public void confirmarPago() {
+        System.out.println("Confirmando pago");
+        if(this.contraseña!=null&&this.correoElectronico!=null&&this.getAlias()!=null){
+            System.out.println("Pago valido");
+        }else{
+            System.out.println("Faltan datos para realizar la compra");
+        }
     }
     
 }

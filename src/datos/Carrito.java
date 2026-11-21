@@ -32,9 +32,4 @@ public class Carrito {
         }
     }
     
-    public HashMap vaciarCarrito(){
-        HashMap nuevo = this.listaProductos;
-        this.listaProductos.clear();
-        return nuevo;
-    }
 }

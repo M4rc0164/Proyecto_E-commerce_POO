@@ -1,5 +1,5 @@
 package principal;
-
+import Pagos.*;
 import datos.*;
 import java.util.Scanner;
 import usuarios.*;
@@ -9,7 +9,7 @@ import usuarios.*;
  * @author marco
  */
 public class Principal {
-
+    MenuSistema menuSistema=new MenuSistema();
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int opt1 = 0;
@@ -25,11 +25,11 @@ public class Principal {
             scan.nextLine();
             switch(opt1){
                 case 1:
+                    iniciarSesion();
                     break;
                 case 2:
                     registrarCliente();
                     break;
-                    
                 case 3:
                     System.out.print("Confirmar salida? S/N: ");
                     confirmacion = scan.next().charAt(0);
@@ -70,7 +70,6 @@ public class Principal {
         
     }
     
-    
     public static Usuario iniciarSesion(){    
         BaseDatos baseDatos = BaseDatos.getBaseDatos();
         String user, contrasena;
@@ -89,7 +88,6 @@ public class Principal {
         
         System.out.print("Ingresa tu contraseña: ");
         contrasena = lector.nextLine().trim();
-        
         if(usuario.validarPassword(contrasena)){
             System.out.println("Contraseña correcta");
         }else{
@@ -97,7 +95,22 @@ public class Principal {
             return null;
         }
         
+        int opcion=0;
+        System.out.println("Registrar forma de pago");
+        System.out.println("1. Paypal\n2.Tarjeta de credito");
+        opcion=lector.nextInt();
+        switch(opcion){
+            case 1:
+                System.out.println("Favor de ingresar un correo electronico");
+                String correoElectronico=lector.next();
+                System.out.println("Favor de ingresar su contraseña");
+                String contraseña=lector.next();
+                Paypal paypal=new Paypal(correoElectronico, contraseña);
+                break;
+        } 
+        
         System.out.println("Sesion iniciada correctamente");
         return usuario;
     }
+    
 }

@@ -4,6 +4,8 @@
  */
 package usuarios;
 
+import Pagos.Paypal;
+import Pagos.TarjetaDeCredito;
 import datos.*;
 import java.util.Scanner;
 import utilidades.LeerDatos;
@@ -23,9 +25,6 @@ public class MenuUsuario {
         this.baseDatos = BaseDatos.getBaseDatos();
     }
 
-    
-    
-    
     public void menuCliente(){
         Cliente cliente = (Cliente) this.usuario;
         int op;
@@ -47,13 +46,55 @@ public class MenuUsuario {
                     
                     break;
                     }
-                case 2: 
+                case 2: {
+                    System.out.print("Ingresa la calle: ");
+                    String calle = lector.nextLine().trim();
+                    System.out.print("Ingresa la colonia: ");
+                    String colonia = lector.nextLine().trim();
+                    System.out.print("ngresa el teléfono: ");
+                    String telefono = lector.nextLine().trim();
+                            
+                    Domicilio domicilio = new Domicilio(calle, colonia, telefono);
+
+                    if (cliente.agregarDomicilio(domicilio)) {
+                        System.out.println("Domicilio registrado correctamente.");
+                    }
+                    
                     break;
+                }
                 case 3: 
+                    int opcion=0;
+                    System.out.println("Registrar forma de pago");
+                    while(opcion!=1&&opcion!=2){
+                        System.out.println("1. Paypal\n2.Tarjeta de credito");
+                        opcion=lector.nextInt();
+                    }
+                    switch(opcion){
+                    case 1:
+                        System.out.println("Favor de ingresar un correo electronico");
+                        String correoElectronico=lector.next();
+                        System.out.println("Favor de ingresar su contrasena del correo electronico");
+                        String contrasenaCorreoElectronico=lector.next();
+                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, user);
+                        break;
+                    case 2:
+                        System.out.println("Favor de ingresar numero de tarjeta de credito");
+                        String numeroDeTarjetaDeCredito=lector.next();
+                        System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
+                        String NIP=lector.next();
+                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(user, numeroDeTarjetaDeCredito, NIP);
+                        break;
+                    default:
+                        System.out.println("Favor de ingresar alguna de las opciones");
+                    break;
+                    }
                     break;
                 case 4: 
+                    
+                    
                     break;
                 case 5: 
+                    cliente.getCarrito().vaciarCarrito();
                     break;
                 case 6: 
                     cliente.getCarrito().mostrarCarrito();
@@ -72,14 +113,48 @@ public class MenuUsuario {
     }
     
     public void menuAdmin(){
-        int op;
+    Admin admin = (Admin) this.usuario;        
+    int op;
         while(true){
-            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\nModificación de precios\n3)Salir");
+            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\n2)Modificación de precios\n3)Salir");
             switch (op) {
-                case 1: 
+                case 1: {
+                    System.out.print("Ingresa el nombre del producto:");
+                    String nombre = lector.nextLine();
+                    float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
+                    
+                    if (precio <= 0) {
+                        System.out.println("El precio debe ser mayor a 0");
+                        break;
+                    }
+                     
+                    System.out.print("Ingresa el id: ");
+                    String id = lector.nextLine();
+                    System.out.print("Ingresa la categoría: ");
+                    String categoria = lector.nextLine();
+                    
+                    Producto producto = new Producto.Builder()
+                            .setNombre(nombre)
+                            .setPrecio(precio)
+                            .setId(id)
+                            .setCategoria(categoria)
+                            .build();
+                    
+                     if (admin.agregarProducto(baseDatos, producto)) {
+                        System.out.println("Producto agregado.");
+                    }
+                            
                     break;
-                case 2: 
+                    }
+                case 2: {
+                    baseDatos.imprimirProductos();
+                    System.out.println("Ingresa el id del producto a modificar");
+                    String id = lector.nextLine();
+                    float precio = LeerDatos.pedirFlotante("Ingresa el nuevo precio: ");
+                    
+                    admin.cambiarPrecio(baseDatos, id, precio);
                     break;
+                }
                 case 3: 
                     return;
                 default:

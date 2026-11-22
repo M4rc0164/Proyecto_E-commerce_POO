@@ -45,7 +45,6 @@ public class Domicilio {
         System.out.println("¿Desea cambiar de numero de telefono? S/N");
         String confirmacion=lector.next();
         String confirmacionEnMinuscula=confirmacion.toLowerCase();
-        // Corregido: antes evaluaba "confirmacion" en vez de "confirmacionEnMinuscula", fallando si el usuario escribía 'S' mayúscula
         if(confirmacionEnMinuscula.contains("s")){
             System.out.println("¿A que numero de telefono quiere cambiar?");
             String nuevoNumeroDeTelefono=lector.next();

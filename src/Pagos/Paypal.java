@@ -36,9 +36,7 @@ public class Paypal extends MedioDePago{
     public String getDescripcionTicket() {
         return "PayPal (" + this.correoElectronico + ")";
     }
-
-    // Se eliminó el atributo booleano "confirmacion" permanente para que solicite la contraseña en cada compra nueva,
-    // y se usa LeerDatos.pedirTexto() 
+ 
     @Override
     public boolean confirmarPago() {
         System.out.println("Confirmando pago");

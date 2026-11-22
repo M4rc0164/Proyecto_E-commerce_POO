@@ -1,5 +1,6 @@
 package datos;
-
+import Pagos.*;
+import usuarios.Domicilio;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,10 +20,10 @@ public class Pedido {
     private LocalDate fechaPedido;
     private float monto = 0;
     private Domicilio domicilio;
-    private MedioPago mediopago;
+    private MedioDePago mediopago;
     private LocalDate fechaEntrega;
     
-    public Pedido(Cliente cliente, MedioPago mediopago, HashMap<Integer,Producto> listaproductos){
+    public Pedido(Cliente cliente, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos){
         this.listaProductos = listaproductos;
         this.fechaPedido = LocalDate.now();
         for(int i=0; i<listaproductos.size(); i++){
@@ -36,7 +37,7 @@ public class Pedido {
     
     public void imprimirPedido(Cliente cliente){
         try {
-            int numpedido = cliente.getListaPedido().indexOf(this) + 1;
+            int numpedido = cliente.getListaDePedidos().indexOf(this) + 1;
             File ticket = new File("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
             ticket.createNewFile();
             FileWriter escritura = new FileWriter("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
@@ -71,7 +72,7 @@ public class Pedido {
             escritura.write("Domicilio: \n");
             escritura.write("Calle: "+ this.domicilio.getCalle()+ "\n");
             escritura.write("Colonia: "+ this.domicilio.getColonia()+ "\n");
-            escritura.write("Teléfono: "+ this.domicilio.getTelefono()+ "\n");
+            escritura.write("Teléfono: "+ this.domicilio.getNumeroDeTelefono()+ "\n");
             escritura.write("Medio de pago: "+ this.mediopago.getAlias()+ "\n");
             if(mediopago.getAlias().equals("Tarjeta")){
                 escritura.write("**** **** **** "+ this.mediopago.getAlias().substring(16,this.mediopago.getAlias().size())+ "\n");

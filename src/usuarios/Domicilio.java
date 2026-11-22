@@ -1,4 +1,5 @@
 package usuarios;
+import java.util.Scanner;
 /**
  *
  * @author Velazquez De Jesus Dante Yabe
@@ -39,6 +40,14 @@ public class Domicilio {
     }
     
     public void cambiarTelefono(){
-        System.out.println("¿Desea cambiar de numero de telefono?");
+        Scanner lector=new Scanner(System.in);
+        System.out.println("¿Desea cambiar de numero de telefono? S/N");
+        String confirmacion=lector.next();
+        String confirmacionEnMinuscula=confirmacion.toLowerCase();
+        if(confirmacion.contains("s")){
+            System.out.println("¿A que numero de telefono quiere cambiar?");
+            String nuevoNumeroDeTelefono=lector.next();
+            this.numeroDeTelefono=nuevoNumeroDeTelefono;
+        }
     }
 }

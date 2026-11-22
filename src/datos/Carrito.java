@@ -1,6 +1,10 @@
 package datos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
+import usuarios.Cliente;
+import usuarios.Domicilio;
 
 /**
  *
@@ -102,28 +106,32 @@ public class Carrito {
         }
         else{
             System.out.println("Domicilios:");
-            for(int i = 0; i<cliente.getListaDomicilio().size(); i++){
+            ArrayList<Domicilio> listadom = cliente.getListaDomicilios();
+            for(int i = 0; i<listadom.size(); i++){
+                Domicilio nuevo = listadom.get(i);
                 System.out.println((i+1));
-                cliente.getListaDomicilio().get(i).mostrarDomicilio();
+                System.out.println("Calle: "+ nuevo.getCalle());
+                System.out.println("Colonia: "+ nuevo.getColonia());
+                System.out.println("Número de teléfono: "+ nuevo.getNumeroDeTelefono());
             }
             int opcion1;
             do{
                 System.out.println("¿En qué domicilio quieres que se haga la entrega? Dame el número");
-            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaDomicilio.size() || scan.nextInt() <= 0);                
+            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaDomicilios().size() || scan.nextInt() <= 0);                
             opcion1 = scan.nextInt();
             
             System.out.println("Métodos de pago:");
-            for(int i = 0; i<cliente.getListaMedio().size(); i++){
+            for(int i = 0; i<cliente.getListaMediosPago().size(); i++){
                 System.out.println((i+1));
-                cliente.getListaMedio().get(i).getAlias();
+                cliente.getListaMediosPago().get(i).getAlias();
             }
             int opcion2;
             do{
                 System.out.println("¿Con qué medio quieres realizar el pago?");
-            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMedio.size() || scan.nextInt() <= 0);                
+            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMediosPago().size() || scan.nextInt() <= 0);                
             opcion2 = scan.nextInt();
             
-            return new Pedido(cliente.getListaDomicilio().get(opcion1 -1), cliente.getListaMedio().get(opcion2 -1));
+            return new Pedido(cliente.getListaDomicilios().get(opcion1 -1), cliente.getListaMediosPago().get(opcion2 -1), this.listaProductos);
         }
     }
 }

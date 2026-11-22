@@ -62,35 +62,33 @@ public class MenuUsuario {
                     
                     break;
                 }
-                case 3: 
-                    int opcion=0;
-                    System.out.println("Registrar forma de pago");
-                    while(opcion!=1&&opcion!=2){
-                        System.out.println("1. Paypal\n2.Tarjeta de credito");
-                        opcion=lector.nextInt();
-                    }
-                    switch(opcion){
-                    case 1:
-                        System.out.println("Favor de ingresar un correo electronico");
-                        String correoElectronico=lector.next();
-                        System.out.println("Favor de ingresar su contrasena del correo electronico");
-                        String contrasenaCorreoElectronico=lector.next();
-                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, user);
-                        break;
-                    case 2:
-                        System.out.println("Favor de ingresar numero de tarjeta de credito");
-                        String numeroDeTarjetaDeCredito=lector.next();
-                        System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
-                        String NIP=lector.next();
-                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(user, numeroDeTarjetaDeCredito, NIP);
-                        break;
-                    default:
-                        System.out.println("Favor de ingresar alguna de las opciones");
-                    break;
-                    }
-                    break;
-                case 4: 
+                case 3: {
+                    System.out.println("Registrar medio de pago");
+                    int tipo = 0;
                     
+                    while (tipo != 1 && tipo != 2) {
+                        tipo = LeerDatos.pedirEntero("1) Paypal\n2) Tarjeta de crédito\n");
+                    }
+                    
+                    if (tipo == 1) {
+                        System.out.print("Correo electrónico: ");
+                        String correo = lector.nextLine().trim();
+                        System.out.print("Contraseña: ");
+                        String pass = lector.nextLine().trim();
+                        cliente.agregarMedioPago(new Paypal(correo, pass, cliente.getUser()));
+                        
+                    } else {
+                        System.out.print("Número de tarjeta: ");
+                        String numero = lector.nextLine().trim();
+                        System.out.print("NIP: ");
+                        String nip = lector.nextLine().trim();
+                        cliente.agregarMedioPago(new TarjetaDeCredito(cliente.getUser(), numero, nip));
+                        
+                    }
+                    System.out.println("Medio de pago registrado.");
+                    break;
+                    }
+                case 4: 
                     
                     break;
                 case 5: 

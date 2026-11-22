@@ -22,13 +22,13 @@ public class Pedido {
     private MedioPago mediopago;
     private LocalDate fechaEntrega;
     
-    public Pedido(Cliente cliente, MedioPago mediopago, HashMap<Integer,Producto> listaproductos){
+    public Pedido(Domicilio domicilio, MedioPago mediopago, HashMap<Integer,Producto> listaproductos){
         this.listaProductos = listaproductos;
         this.fechaPedido = LocalDate.now();
         for(int i=0; i<listaproductos.size(); i++){
             this.monto += listaproductos.get(i).getPrecio();
         }
-        this.domicilio = Cliente.getDomicilio();
+        this.domicilio = domicilio;
         this.mediopago = mediopago;
         Random aleatorio = new Random();
         this.fechaEntrega = LocalDate.now().plusDays(aleatorio.nextInt(1,8));

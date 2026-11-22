@@ -9,9 +9,9 @@ public class TarjetaDeCredito extends MedioDePago{
     private String NIP;
 
     public TarjetaDeCredito(String alias, String numeroDeTarjetaDeCredito, String NIP) {
+        super(alias);
         this.numeroDeTarjetaDeCredito=numeroDeTarjetaDeCredito;
         this.NIP=NIP;
-        super(alias);
     }
 
     public String getNumeroDeTarjetaDeCredito() {
@@ -31,19 +31,26 @@ public class TarjetaDeCredito extends MedioDePago{
     }
 
     @Override
-    public void confirmarPago() {
+    public boolean confirmarPago() {
+        if(confirmarPago()==true){
+            System.out.println("El pago ya ha sido confirmado");
+            return true;
+        }
         Scanner lector=new Scanner(System.in);
         System.out.println("Confirmando pago");
         if(this.numeroDeTarjetaDeCredito!=null&&this.NIP!=null&&this.getAlias()!=null){
+            System.out.println("El numero de su tarjeta de credito es: "+this.numeroDeTarjetaDeCredito);
             System.out.println("Favor de confirmar el NIP de su tarjeta de crédito");
             String confirmacionDeNIP=lector.next();
-            while(!this.NIP.equals(confirmacionDeNIP)){
-                System.out.println("Favor de ingresar de nuevo el NIP, no coincide con el ingresado en su registro");
+            if(this.NIP.equals(confirmacionDeNIP)){
+                System.out.println("Pago realizado exitosamente");
+                return true;
+            }else{
+                System.out.println("Error, la contraseña no coincide, si quiere confirmar la compra, favor de ingresar de nuevo");
+                return false;
             }
-        }else{
-            System.out.println("Faltan datos para realizar la compra");
         }
-    }
-    
-    
+        System.out.println("Faltan datos para realizar la compra");
+        return false;
+    } 
 }

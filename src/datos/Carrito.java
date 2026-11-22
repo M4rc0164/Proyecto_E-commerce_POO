@@ -21,14 +21,18 @@ public class Carrito {
     
     // Imprime los productos, si hay repetidos, solo los muestra una vez, con la cantidad en carrito
     public void mostrarCarrito(){
+        int p;
         for(int i=1; i<=this.listaProductos.size(); i++){
             Producto nuevo = this.listaProductos.get(i);
+            p = 0;
             while(this.listaProductos.get(i+1).equals(nuevo)){
                 i++;
+                p++;
             }
             System.out.println("Producto "+ this.listaProductos.get(i).getId() +": "+ this.listaProductos.get(i).getNombre());
             System.out.println("Categoría: "+ this.listaProductos.get(i).getCategoria());
             System.out.println("Precio: $"+ this.listaProductos.get(i).getPrecio());
+            System.out.println("Cantidad: "+ p);
         }
     }
     

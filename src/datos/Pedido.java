@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Random;
-import usuarios.Cliente;
+import usuarios.*;
 
 /**
  *

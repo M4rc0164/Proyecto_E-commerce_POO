@@ -55,7 +55,6 @@ public class Producto {
         }
     }
 
-    // Getters
     public String getNombre() {
         return nombre;
     }
@@ -75,5 +74,5 @@ public class Producto {
     public void setPrecio(float precio) {
         this.precio = precio;
     }
-
+        
 }

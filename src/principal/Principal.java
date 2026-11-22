@@ -67,7 +67,7 @@ public class Principal {
         System.out.println("Usuario registrado correctamente");    
     }
     
-    public static Usuario iniciarSesion(){    
+    public static void iniciarSesion(){    
         BaseDatos baseDatos = BaseDatos.getBaseDatos();
         String user, contrasena;
         Usuario usuario;
@@ -80,7 +80,7 @@ public class Principal {
         
         if(usuario == null){
             System.out.println("No existe el usuario");
-            return null;
+            return;
         }
         
         System.out.print("Ingresa tu contraseña: ");
@@ -89,13 +89,15 @@ public class Principal {
             System.out.println("Contraseña correcta");
         }else{
             System.out.println("Contraseña incorrecta, intentalo de nuevo");
-            return null;
+            return;
         }
         
-        System.out.println("Sesion iniciada correctamente");
-        MenuUsuario menuUsuario=new MenuUsuario(usuario);
-        menuUsuario.menuCliente();
-        return usuario;
+        MenuUsuario menuUsuario = new MenuUsuario(usuario);
+        if (usuario instanceof Admin) {
+            menuUsuario.menuAdmin();
+        } else {
+            menuUsuario.menuCliente();
+        }
     }
     
 }

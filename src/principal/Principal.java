@@ -1,5 +1,5 @@
 package principal;
-
+import Pagos.*;
 import datos.*;
 import java.util.Scanner;
 import usuarios.*;
@@ -9,7 +9,6 @@ import usuarios.*;
  * @author marco
  */
 public class Principal {
-
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         int opt1 = 0;
@@ -25,10 +24,11 @@ public class Principal {
             scan.nextLine();
             switch(opt1){
                 case 1:
+                    iniciarSesion();
                     break;
                 case 2:
+                    registrarCliente();
                     break;
-                    
                 case 3:
                     System.out.print("Confirmar salida? S/N: ");
                     confirmacion = scan.next().charAt(0);
@@ -41,7 +41,7 @@ public class Principal {
 
     }
     
-    public void registrarCliente(){
+    public static void registrarCliente(){
         BaseDatos baseDatos = BaseDatos.getBaseDatos();
         String user, contrasena, nombre;
         Usuario usuario;
@@ -63,14 +63,11 @@ public class Principal {
         
         System.out.print("Ingresa tu contraseña: ");
         contrasena = lector.nextLine().trim();
-        
         baseDatos.agregarUsuario(new Cliente(user, nombre, contrasena));
-        System.out.println("Usuario registrado correctamente");
-        
+        System.out.println("Usuario registrado correctamente");    
     }
     
-    
-    public static Usuario iniciarSesion(){    
+    public static void iniciarSesion(){    
         BaseDatos baseDatos = BaseDatos.getBaseDatos();
         String user, contrasena;
         Usuario usuario;
@@ -83,20 +80,26 @@ public class Principal {
         
         if(usuario == null){
             System.out.println("No existe el usuario");
-            return null;
+            return;
         }
         
         System.out.print("Ingresa tu contraseña: ");
         contrasena = lector.nextLine().trim();
-        
         if(usuario.validarPassword(contrasena)){
             System.out.println("Contraseña correcta");
         }else{
             System.out.println("Contraseña incorrecta, intentalo de nuevo");
-            return null;
+            return;
         }
         
         System.out.println("Sesion iniciada correctamente");
-        return usuario;
+        MenuUsuario menuUsuario=new MenuUsuario(usuario);
+        
+        if (usuario instanceof Admin) {
+            menuUsuario.menuAdmin();
+        } else if (usuario instanceof Cliente) {
+            menuUsuario.menuCliente();
+        }
     }
+    
 }

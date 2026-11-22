@@ -14,10 +14,10 @@ import java.util.ArrayList;
  * @author EdelM
  */
 public class Cliente extends Usuario{
-    ArrayList<Domicilio> listaDomicilios;
-    ArrayList<Pedido> listaPedido;
-    ArrayList<MedioDePago> listaMediosPago;
-    Carrito carrito;
+    private ArrayList<Domicilio> listaDomicilios;
+    private ArrayList<Pedido> listaPedido;
+    private ArrayList<MedioDePago> listaMediosPago;
+    private Carrito carrito;
     
     public Cliente(String user, String nombre, String password) {
         super(user, nombre, password);
@@ -26,7 +26,7 @@ public class Cliente extends Usuario{
         this.listaMediosPago = new ArrayList<>();
         this.carrito = new Carrito();
     }
-
+    
     public ArrayList<Domicilio> getListaDomicilios() {
         return listaDomicilios;
     }
@@ -76,5 +76,5 @@ public class Cliente extends Usuario{
         listaMediosPago.add(medioPago);
         return true;
     }
-    
+
 }

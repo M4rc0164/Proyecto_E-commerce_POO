@@ -2,6 +2,7 @@ package principal;
 import Pagos.*;
 import datos.*;
 import java.util.Scanner;
+import static principal.ProductosInciales.agregarProductos;
 import usuarios.*;
 
 
@@ -10,6 +11,9 @@ import usuarios.*;
  */
 public class Principal {
     public static void main(String[] args) {
+        agregarProductos();
+                
+                
         Scanner scan = new Scanner(System.in);
         int opt1 = 0;
         char confirmacion = 'n';

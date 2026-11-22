@@ -17,17 +17,21 @@ import Pagos.*;
 
 public class Pedido {
     
-    private HashMap<Integer, Producto> listaProductos;
+    private HashMap<Producto, Integer> cantidades;
+    private HashMap<String, Producto> listaproductos;
     private LocalDate fechaPedido;
     private float monto = 0;
     private Domicilio domicilio;
     private MedioDePago mediopago;
     private LocalDate fechaEntrega;
-    public Pedido(Domicilio domicilio, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos){
-        this.listaProductos = listaproductos;
+    public Pedido(Domicilio domicilio, MedioDePago mediopago, HashMap<Producto,Integer> cantidades, HashMap<String, Producto> listaproductos){
+        this.listaproductos = listaproductos;
+        this.cantidades = cantidades;
         this.fechaPedido = LocalDate.now();
-        for(int i=0; i<listaproductos.size(); i++){
-            this.monto += listaproductos.get(i).getPrecio();
+        for(Producto p: listaproductos.values()){
+            for(int i=0; i<cantidades.get(p); i++){
+                this.monto += p.getPrecio();
+            }
         }
         this.domicilio = domicilio;
         this.mediopago = mediopago;
@@ -36,35 +40,50 @@ public class Pedido {
     }
     
     public void imprimirPedido(Cliente cliente){
+        File carpeta = new File("Pedidos cliente"+ cliente.getNombre());
+        carpeta.mkdir();
         try{
-            int numpedido = cliente.getListaPedido().indexOf(this) + 1;
+            int numpedido;
+            if(cliente.getListaPedido().indexOf(this) == -1){
+                numpedido = cliente.getListaPedido().size() +1;
+            }
+            else{
+                numpedido = cliente.getListaPedido().indexOf(this) + 1; 
+            }
             File ticket = new File("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
             ticket.createNewFile();
             try (FileWriter escritura = new FileWriter("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido)) {
                 escritura.write("Pedido "+ numpedido + "\n");
                 escritura.write("Productos: \n");
-                for(int i=0; i<this.listaProductos.size(); i++){
+                int i=0;
+                for(Producto p: cliente.getListaPedido().get(cliente.getListaPedido().indexOf(this)).listaproductos.values()){
                     //Considerando nombres muy largos
-                    if(this.listaProductos.get(i).getNombre().length() > 30){
+                    if(p.getNombre().length() > 30){
                         //Considerando si el nombre tiene espacios
-                        if(this.listaProductos.get(i).getNombre().indexOf(" ") != - 1){
-                            int indice = this.listaProductos.get(i).getNombre().indexOf(" ");
-                            int tamaño = 30 - this.listaProductos.get(i).getNombre().substring(0, indice +1).length();
-                            escritura.write((i+1) + ". " +this.listaProductos.get(i).getNombre().substring(0, indice +1));
+                        if(p.getNombre().indexOf(" ") != - 1){
+                            int indice = p.getNombre().indexOf(" ");
+                            int tamaño = 30 - p.getNombre().substring(0, indice +1).length();
+                            escritura.write((i+1) + ". " +p.getNombre().substring(0, indice +1));
                             for(int j = 0; j<tamaño; j++){
                                 escritura.write(" ");
                             }
-                            escritura.write(" $ "+ this.listaProductos.get(i).getPrecio()+ "\n");
-                            escritura.write("   "+this.listaProductos.get(i).getNombre().substring(indice +1, this.listaProductos.get(i).getNombre().length()) + "\n");
+                            escritura.write(" $ "+ p.getPrecio()+ "\n");
+                            escritura.write("   "+p.getNombre().substring(indice +1, p.getNombre().length()) + "\n");
                         }
                         else{
-                            escritura.write((i+1)+ ". "+this.listaProductos.get(i).getNombre().substring(0, 31) + " $" +this.listaProductos.get(i).getPrecio()+ "\n");
-                            escritura.write("   "+ this.listaProductos.get(i).getNombre().substring(31, this.listaProductos.get(i).getNombre().length()) + "\n");
+                            escritura.write((i+1)+ ". "+p.getNombre().substring(0, 31) + " $" +p.getPrecio()+ "\n");
+                            escritura.write("   "+ p.getNombre().substring(31, p.getNombre().length()) + "\n");
                         }
                     }
                     else{
-                        escritura.write((i+1)+ ". " + this.listaProductos.get(i).getNombre()+ " $" + this.listaProductos.get(i).getNombre()+ "\n");
+                        int tamaño = 30 - p.getNombre().length();
+                        escritura.write((i+1)+ ". " + p.getNombre());
+                        for(int j=0; j<=tamaño; j++){
+                            escritura.write(" ");
+                        }
+                        escritura.write("$" + p.getPrecio()+ "\n");   
                     }
+                    i++;
                 }
             escritura.write("Monto total                       $"+ this.monto+ "\n");
             escritura.write("Fecha de pedido: "+ this.fechaPedido+ "\n");
@@ -77,16 +96,23 @@ public class Pedido {
             if(this.mediopago.getAlias().equals("Tarjeta")){
                 escritura.write("**** **** **** "+ this.mediopago.getAlias().substring(16,this.mediopago.getAlias().length())+ "\n");
             }
-            else if(this.mediopago.getAlias().equals("Paypal")){
-                if(this.mediopago instanceof Paypal){
-                    Paypal paypal=(Paypal) this.mediopago;
+            else if(this.mediopago instanceof Paypal paypal){
                     escritura.write("Correo: "+ paypal.getCorreoElectronico()+ "\n");
-                }
             }
+            
             escritura.close();
         }
         } catch (IOException ex) {
             System.out.println("Ocurrió un error");
         }
     }
+
+    public HashMap<String, Producto> getListaProductos() {
+        return this.listaproductos;
+    }
+
+    public LocalDate getFechaPedido() {
+        return fechaPedido;
+    }
+   
 }

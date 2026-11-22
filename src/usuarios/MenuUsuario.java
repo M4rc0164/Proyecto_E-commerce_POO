@@ -17,8 +17,6 @@ import utilidades.LeerDatos;
  * @author EdelM
  */
 public class MenuUsuario {
-    ArrayList <Paypal> listaDePaypal=new ArrayList<>();
-    ArrayList <TarjetaDeCredito> listaDeTarjetasDeCredito=new ArrayList<>();
     private Scanner lector;
     private Usuario usuario;
     private BaseDatos baseDatos;
@@ -34,19 +32,20 @@ public class MenuUsuario {
         int op;
         
         while(true){
-            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7) Imprimir ticket de un pedido\n8)Salir\n");
+            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7)Imprimir ticket de un pedido\n8)Salir\n");
             switch (op) {
                 case 1: {
                     this.baseDatos.imprimirProductos();
                     
                     System.out.print("Ingresa el id del producto que se añadirá al carrito: ");
-                    Producto producto = this.baseDatos.buscarProducto(lector.nextLine());
+                    String l = lector.nextLine();
+                    Producto producto = this.baseDatos.buscarProducto(l);
                     if(producto == null){
                         System.out.println("No existe un producto con ese id");
                         break;
                     }
-                    
                     cliente.getCarrito().agregarProducto(producto);
+                    
                     break;
                     }
                 case 2: {
@@ -54,7 +53,7 @@ public class MenuUsuario {
                     String calle = lector.nextLine().trim();
                     System.out.print("Ingresa la colonia: ");
                     String colonia = lector.nextLine().trim();
-                    System.out.print("ngresa el teléfono: ");
+                    System.out.print("Ingresa el teléfono: ");
                     String telefono = lector.nextLine().trim();
                             
                     Domicilio domicilio = new Domicilio(calle, colonia, telefono);
@@ -66,11 +65,6 @@ public class MenuUsuario {
                     break;
                 }
                 case 3: 
-                    //Solo se permitira un medio de pago valido
-                    if(!this.listaDePaypal.isEmpty()||!this.listaDeTarjetasDeCredito.isEmpty()){
-                        System.out.println("No puede ingresar mas de un medio de pago, lo sentimos");
-                        break;
-                    }
                     int opcion=0;
                     System.out.println("Registrar medio de pago");
                     while(opcion!=1&&opcion!=2){
@@ -84,7 +78,7 @@ public class MenuUsuario {
                         System.out.println("Favor de ingresar su contrasena del correo electronico");
                         String contrasenaCorreoElectronico=lector.next();
                         Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, cliente.getUser());
-                        this.listaDePaypal.add(paypal);
+                        cliente.getListaMediosPago().add(paypal);
                         break;
                     case 2:
                         System.out.println("Favor de ingresar numero de tarjeta de credito");
@@ -92,38 +86,17 @@ public class MenuUsuario {
                         System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
                         String NIP=lector.next();
                         TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(cliente.getUser(), numeroDeTarjetaDeCredito, NIP);
-                        this.listaDeTarjetasDeCredito.add(tarjetaDeCredito);
+                        cliente.getListaMediosPago().add(tarjetaDeCredito);
                         break;
                     default:
                         System.out.println("Error, favor de ingresar alguna de las opciones");
                     break;
                     }
                     break;
-                case 4: 
-                    //Primero validamos que las listas no esten vacias
-                    if(this.listaDePaypal.isEmpty()&&this.listaDeTarjetasDeCredito.isEmpty()){
-                        System.out.println("No hay medios de pago registrados");
-                        break;
-                    }
-                    
-                    if(!this.listaDePaypal.isEmpty()){
-                        for(int i=0;i<this.listaDePaypal.size();i++){
-                            //Encontramos el usuario mediante el alias que uso para registrarse
-                            if(this.listaDePaypal.get(i).getAlias().equals(cliente.getUser())){
-                                this.listaDePaypal.get(i).confirmarPago();
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if(!this.listaDeTarjetasDeCredito.isEmpty()){
-                       for(int i=0;i<this.listaDeTarjetasDeCredito.size();i++){
-                           if(this.listaDeTarjetasDeCredito.get(i).getAlias().equals(cliente.getUser())){
-                               this.listaDeTarjetasDeCredito.get(i).confirmarPago();
-                               break;
-                           }
-                       } 
-                    }
+                case 4:                     
+                    Pedido pedido = cliente.getCarrito().confirmarPedido(cliente);
+                    cliente.getListaPedido().add(pedido);
+                    pedido.imprimirPedido(cliente);
                     break;
                 case 5: 
                     cliente.getCarrito().vaciarCarrito();
@@ -132,7 +105,32 @@ public class MenuUsuario {
                     cliente.getCarrito().mostrarCarrito();
                     break;
                 case 7: 
-                    
+                    if(cliente.getListaPedido().isEmpty()){
+                        System.out.println("No hay pedidos aún.");
+                        break;
+                    }
+                    ArrayList<Pedido> pedidos = cliente.getListaPedido();
+                    System.out.println("Pedidos realizados");
+                    for(int i=0; i<pedidos.size(); i++){
+                        System.out.print(i+1);
+                        System.out.println(pedidos.get(i).getFechaPedido());
+                        System.out.println("Productos: ");
+                        int j=1;
+                        for(Producto p: cliente.getListaPedido().get(i).getListaProductos().values()){
+                            System.out.println("   "+ (j) + " "+ p.getNombre());
+                        }
+                    }
+                    int opt;
+                    do{
+                        System.out.println("¿Qué pedido quieres imprimir? Dame el número");
+                        if(!lector.hasNextInt()){
+                            System.out.println("Ingresa un número.");
+                            lector.next();
+                        }
+                        opt = lector.nextInt();
+                    }while(opt > cliente.getListaPedido().size() || opt <= 0);
+                    opt = lector.nextInt();
+                    cliente.getListaPedido().get(opt-1).imprimirPedido(cliente);
                     break;
                 case 8: 
                     return;

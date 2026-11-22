@@ -13,72 +13,67 @@ import usuarios.Domicilio;
  */
 
 public class Carrito {
-    
-    private HashMap<Integer, Producto> listaProductos;
+    private HashMap<String, Producto> listaProductos;
+    private HashMap<Producto, Integer> cantidades;
 
     public Carrito() {
         this.listaProductos = new HashMap<>();
+        this.cantidades = new HashMap<>();
     }
     
     public void agregarProducto(Producto producto){
-        this.listaProductos.put(this.listaProductos.size() +1, producto);
+        this.listaProductos.put(producto.getId(), producto);
+        this.cantidades.merge(producto, 1, Integer::sum);
     }
     
     // Imprime los productos, si hay repetidos, solo los muestra una vez, con la cantidad en carrito
     public void mostrarCarrito(){
-        int p;
-        for(int i=1; i<=this.listaProductos.size(); i++){
-            Producto nuevo = this.listaProductos.get(i);
-            p = 0;
-            while(this.listaProductos.get(i+1).equals(nuevo)){
-                i++;
-                p++;
-            }
-            System.out.println("Producto "+ this.listaProductos.get(i).getId() +": "+ this.listaProductos.get(i).getNombre());
-            System.out.println("Categoría: "+ this.listaProductos.get(i).getCategoria());
-            System.out.println("Precio: $"+ this.listaProductos.get(i).getPrecio());
-            System.out.println("Cantidad: "+ p);
+        for(Producto p: this.listaProductos.values()){
+            System.out.println("Producto "+ p.getId() +": "+ p.getNombre());
+            System.out.println("Categoría: "+ p.getCategoria());
+            System.out.println("Precio: $"+ (p.getPrecio()*this.cantidades.get(p)));
+            System.out.println("Cantidad: "+ this.cantidades.get(p));
         }
     }
     
     public void vaciarCarrito(){
         this.listaProductos.clear();
     }
-    public void eliminarProducto(int pr){
-        int p = 0;
-        ArrayList<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < this.listaProductos.size(); i++) {
-            if(this.listaProductos.get(i).equals(this.listaProductos.get(pr -1))){
-                p ++;
-                indices.add(i);
-            }
-        }
-        if(p == 1){
-            this.listaProductos.remove(this.listaProductos.get(indices.get(0)));
+    public void eliminarProducto(String id){
+        Producto producto = this.listaProductos.get(id);
+        if(this.cantidades.get(producto) == 1){
+            this.listaProductos.remove(id);
+            this.cantidades.remove(producto);
         }
         else{
             Scanner scan = new Scanner(System.in);
             char confirmacion = 'n';
-            System.out.println("Tienes "+ p + " " +this.listaProductos.get(pr-1).getNombre());
+            System.out.println("Tienes "+ this.cantidades.get(producto) + " " +this.listaProductos.get(id).getNombre());
             System.out.println("¿Quiéres eliminar todos?");
             confirmacion = scan.next().charAt(0);
             if(confirmacion == 's' || confirmacion == 'S'){
-                for(int i = 0; i<indices.size(); i++){
-                    this.listaProductos.remove(indices.get(i));
-                    System.out.println("Producto eliminado");
-                }
+                this.listaProductos.remove(id);
+                this.cantidades.remove(producto);
             }
             else{
-                int e;
+                int e = -1;
                 do{
                     System.out.println("¿Cuántos quieres eliminar");
-                }while(!scan.hasNextInt() || scan.nextInt() > p || scan.nextInt() <= -1);
+                    if(!scan.hasNextInt()){
+                        System.out.println("Ingresa un número");
+                        scan.next();
+                    }
+                    e = scan.nextInt();
+                }while(e > this.cantidades.get(producto) || e <= -1);
                 
-                e = scan.nextInt();
-                int x=0;
+                
                 for(int i=0; i<e; i++){
-                    this.listaProductos.remove(indices.get(x++));
+                    this.cantidades.put(producto, this.cantidades.get(producto)-1);
                     System.out.println("Producto eliminado");
+                }
+                if(this.cantidades.get(producto) == 0){
+                    this.cantidades.remove(producto);
+                    this.listaProductos.remove(id);
                 }
             }
         }
@@ -92,13 +87,14 @@ public class Carrito {
         do{
             System.out.println("¿Quiéres eliminar algún producto?");
             confirmacion = scan.next().charAt(0);
+            scan.nextLine();
             if(confirmacion == 's' || confirmacion == 'S'){
-                int p;
+                String id = "";
                 do{
-                    System.out.println("¿Qué producto quieres eliminar? Dame el número");
-                }while(!scan.hasNextInt() || scan.nextInt() > this.listaProductos.size() || scan.nextInt() <= 0);
-                p = scan.nextInt();
-                eliminarProducto(p);
+                    System.out.println("¿Qué producto quieres eliminar? Dame el id");
+                    id = scan.nextLine();
+                }while(!this.listaProductos.containsKey(id));
+                eliminarProducto(id);
             }
         }while(confirmacion == 's' || confirmacion == 'S');
         if(this.listaProductos.isEmpty()){
@@ -106,37 +102,74 @@ public class Carrito {
             return null;
         }
         else{
+            if(cliente.getListaDomicilios().isEmpty()){
+                System.out.println("No hay domicilios registrados");
+                return null;
+            }
             System.out.println("Domicilios:");
             for(int i = 0; i<cliente.getListaDomicilios().size(); i++){
                 System.out.println((i+1));
                 cliente.getListaDomicilios().get(i).mostrarDomicilio();
             }
-            ArrayList<Domicilio> listadom = cliente.getListaDomicilios();
-            for(int i = 0; i<listadom.size(); i++){
-                Domicilio nuevo = listadom.get(i);
-                System.out.println((i+1));
-                System.out.println("Calle: "+ nuevo.getCalle());
-                System.out.println("Colonia: "+ nuevo.getColonia());
-                System.out.println("Número de teléfono: "+ nuevo.getNumeroDeTelefono());
-            }
-            int opcion1;
+            int opcion1 = -1;
             do{
                 System.out.println("¿En qué domicilio quieres que se haga la entrega? Dame el número");
-            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMediosPago().size() || scan.nextInt() <= 0);                                
-            opcion1 = scan.nextInt();
+                if(!scan.hasNextInt()){
+                    System.out.println("Ingresa un número.");
+                    scan.next();
+                }
+                opcion1 = scan.nextInt();
+            }while(opcion1 <= 0 || opcion1 > cliente.getListaDomicilios().size());                                
             
+            if(cliente.getListaMediosPago().isEmpty()){
+                System.out.println("No hay medios de pago registrados");
+                return null;
+            }
             System.out.println("Métodos de pago:");
             for(int i = 0; i<cliente.getListaMediosPago().size(); i++){
                 System.out.println((i+1));
-                cliente.getListaMediosPago().get(i).getAlias();
+                System.out.println(cliente.getListaMediosPago().get(i).getAlias());
             }
-            int opcion2;
+            int opcion2 = -1;
             do{
-                System.out.println("¿Con qué medio quieres realizar el pago?");
-            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMediosPago().size() || scan.nextInt() <= 0);                
-            opcion2 = scan.nextInt();
-            return new Pedido(cliente.getListaDomicilios().get(opcion1 -1), cliente.getListaMediosPago().get(opcion2 -1), this.listaProductos);
+                System.out.println("¿Con qué método quieres realizar el pago? Dame el número");
+                if(!scan.hasNextInt()){
+                    System.out.println("Ingresa un número.");
+                    scan.next();
+                }
+                opcion2 = scan.nextInt();
+            }while(opcion2 <= 0 || opcion1 > cliente.getListaMediosPago().size());  
+            System.out.println("-----");
+            System.out.println("Información del pedido: ");
+            System.out.println("Cliente: "+ cliente.getUser());
+            System.out.println("Domicilio: " );
+            System.out.println("Calle: "+ cliente.getListaDomicilios().get(opcion1 -1).getCalle());
+            System.out.println("Colonia: "+ cliente.getListaDomicilios().get(opcion1 -1).getColonia());
+            System.out.println("Número de teléfono: "+ cliente.getListaDomicilios().get(opcion1 -1).getNumeroDeTelefono());
+            System.out.println("Medio de pago: "+ cliente.getListaMediosPago().get(opcion2 -1).getAlias());
+            confirmacion = 'n';
+            System.out.println("¿Confirmar pedido?");
+            confirmacion = scan.next().charAt(0);
+            if(confirmacion == 's' || confirmacion == 'S'){
+                boolean procesopago = cliente.getListaMediosPago().get(opcion2-1).confirmarPago();
+                if(procesopago){
+                    System.out.println("Se ha realizado el pedido. Se generó el tiket.");
+                    Pedido nuevo = new Pedido(cliente.getListaDomicilios().get(opcion1 -1), cliente.getListaMediosPago().get(opcion2 -1), this.cantidades, this.listaProductos);
+                    vaciarCarrito();
+                    return nuevo;
+                }
+                else{
+                    System.out.println("Pago rechazado");
+                    return null;
+                }
+            }
+            else{
+                return null;
+            }
+        }
     }
-        
+
+    public HashMap<String, Producto> getListaProductos() {
+        return listaProductos;
     }
 }

@@ -17,5 +17,5 @@ public abstract class MedioDePago {
     public void setAlias(String alias) {
         this.alias = alias;
     }
-    public abstract void confirmarPago();
+    public abstract boolean confirmarPago();
 }

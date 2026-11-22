@@ -14,11 +14,6 @@ import java.util.ArrayList;
  * @author EdelM
  */
 public class Cliente extends Usuario{
-    //Todas las listas registraran datos de un usuario a la vez
-    ArrayList<Domicilio> listaDeDomicilios=new ArrayList<>();
-    //Por ejemplo, en la lista de domicilios se regitran todos los domicilios registrados de un usuario
-    ArrayList<MedioDePago> mediosDePago=new ArrayList<>();
-    ArrayList <Pedido> listaDePedidos=new ArrayList<>();
     ArrayList<Domicilio> listaDomicilios;
     ArrayList<Pedido> listaPedido;
     ArrayList<MedioDePago> listaMediosPago;
@@ -32,28 +27,28 @@ public class Cliente extends Usuario{
         this.carrito = new Carrito();
     }
 
-    public ArrayList<Domicilio> getListaDeDomicilios() {
-        return listaDeDomicilios;
+    public ArrayList<Domicilio> getListaDomicilios() {
+        return listaDomicilios;
     }
 
-    public void setListaDeDomicilios(ArrayList<Domicilio> listaDeDomicilios) {
-        this.listaDeDomicilios = listaDeDomicilios;
+    public void setListaDomicilios(ArrayList<Domicilio> listaDomicilios) {
+        this.listaDomicilios = listaDomicilios;
     }
 
-    public ArrayList<MedioDePago> getMediosDePago() {
-        return mediosDePago;
+    public ArrayList<Pedido> getListaPedido() {
+        return listaPedido;
     }
 
-    public void setMediosDePago(ArrayList<MedioDePago> mediosDePago) {
-        this.mediosDePago = mediosDePago;
+    public void setListaPedido(ArrayList<Pedido> listaPedido) {
+        this.listaPedido = listaPedido;
     }
 
-    public ArrayList<Pedido> getListaDePedidos() {
-        return listaDePedidos;
+    public ArrayList<MedioDePago> getListaMediosPago() {
+        return listaMediosPago;
     }
 
-    public void setListaDePedidos(ArrayList<Pedido> listaDePedidos) {
-        this.listaDePedidos = listaDePedidos;
+    public void setListaMediosPago(ArrayList<MedioDePago> listaMediosPago) {
+        this.listaMediosPago = listaMediosPago;
     }
 
     public Carrito getCarrito() {
@@ -62,18 +57,6 @@ public class Cliente extends Usuario{
 
     public void setCarrito(Carrito carrito) {
         this.carrito = carrito;
-    }   
-    
-    public ArrayList<Domicilio> getListaDomicilios() {
-        return listaDomicilios;
-    }
-
-    public ArrayList<Pedido> getListaPedido() {
-        return listaPedido;
-    }
-
-    public ArrayList<MedioDePago> getListaMediosPago() {
-        return listaMediosPago;
     }
     
     public boolean agregarDomicilio(Domicilio domicilio) {

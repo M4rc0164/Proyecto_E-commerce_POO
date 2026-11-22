@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Random;
 import usuarios.*;
+import Pagos.*;
 
 /**
  *
@@ -22,7 +23,7 @@ public class Pedido {
     private Domicilio domicilio;
     private MedioDePago mediopago;
     private LocalDate fechaEntrega;
-    public Pedido(Cliente cliente, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos, Domicilio domicilio){
+    public Pedido(Domicilio domicilio, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos){
         this.listaProductos = listaproductos;
         this.fechaPedido = LocalDate.now();
         for(int i=0; i<listaproductos.size(); i++){
@@ -35,36 +36,36 @@ public class Pedido {
     }
     
     public void imprimirPedido(Cliente cliente){
-        try {
-            int numpedido = cliente.getListaDePedidos().indexOf(this) + 1;
+        try{
+            int numpedido = cliente.getListaPedido().indexOf(this) + 1;
             File ticket = new File("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
             ticket.createNewFile();
-            FileWriter escritura = new FileWriter("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido);
-            escritura.write("Pedido "+ numpedido + "\n");
-            escritura.write("Productos: \n");
-            for(int i=0; i<this.listaProductos.size(); i++){
-                //Considerando nombres muy largos
-                if(this.listaProductos.get(i).getNombre().length() > 30){
-                    //Considerando si el nombre tiene espacios
-                    if(this.listaProductos.get(i).getNombre().indexOf(" ") != - 1){
-                        int indice = this.listaProductos.get(i).getNombre().indexOf(" ");
-                        int tamaño = 30 - this.listaProductos.get(i).getNombre().substring(0, indice +1).length();
-                        escritura.write((i+1) + ". " +this.listaProductos.get(i).getNombre().substring(0, indice +1));
-                        for(int j = 0; j<tamaño; j++){
-                            escritura.write(" ");
+            try (FileWriter escritura = new FileWriter("Pedidos cliente"+ cliente.getNombre() + "//Pedido "+ numpedido)) {
+                escritura.write("Pedido "+ numpedido + "\n");
+                escritura.write("Productos: \n");
+                for(int i=0; i<this.listaProductos.size(); i++){
+                    //Considerando nombres muy largos
+                    if(this.listaProductos.get(i).getNombre().length() > 30){
+                        //Considerando si el nombre tiene espacios
+                        if(this.listaProductos.get(i).getNombre().indexOf(" ") != - 1){
+                            int indice = this.listaProductos.get(i).getNombre().indexOf(" ");
+                            int tamaño = 30 - this.listaProductos.get(i).getNombre().substring(0, indice +1).length();
+                            escritura.write((i+1) + ". " +this.listaProductos.get(i).getNombre().substring(0, indice +1));
+                            for(int j = 0; j<tamaño; j++){
+                                escritura.write(" ");
+                            }
+                            escritura.write(" $ "+ this.listaProductos.get(i).getPrecio()+ "\n");
+                            escritura.write("   "+this.listaProductos.get(i).getNombre().substring(indice +1, this.listaProductos.get(i).getNombre().length()) + "\n");
                         }
-                        escritura.write(" $ "+ this.listaProductos.get(i).getPrecio()+ "\n");
-                        escritura.write("   "+this.listaProductos.get(i).getNombre().substring(indice +1, this.listaProductos.get(i).getNombre().length()) + "\n");
+                        else{
+                            escritura.write((i+1)+ ". "+this.listaProductos.get(i).getNombre().substring(0, 31) + " $" +this.listaProductos.get(i).getPrecio()+ "\n");
+                            escritura.write("   "+ this.listaProductos.get(i).getNombre().substring(31, this.listaProductos.get(i).getNombre().length()) + "\n");
+                        }
                     }
                     else{
-                        escritura.write((i+1)+ ". "+this.listaProductos.get(i).getNombre().substring(0, 31) + " $" +this.listaProductos.get(i).getPrecio()+ "\n");
-                        escritura.write("   "+ this.listaProductos.get(i).getNombre().substring(31, this.listaProductos.get(i).getNombre().length()) + "\n");
+                        escritura.write((i+1)+ ". " + this.listaProductos.get(i).getNombre()+ " $" + this.listaProductos.get(i).getNombre()+ "\n");
                     }
                 }
-                else{
-                    escritura.write((i+1)+ ". " + this.listaProductos.get(i).getNombre()+ " $" + this.listaProductos.get(i).getNombre()+ "\n");
-                }
-            }
             escritura.write("Monto total                       $"+ this.monto+ "\n");
             escritura.write("Fecha de pedido: "+ this.fechaPedido+ "\n");
             escritura.write("Fecha de entrega: "+ this.fechaEntrega+ "\n");
@@ -83,6 +84,7 @@ public class Pedido {
                 }
             }
             escritura.close();
+        }
         } catch (IOException ex) {
             System.out.println("Ocurrió un error");
         }

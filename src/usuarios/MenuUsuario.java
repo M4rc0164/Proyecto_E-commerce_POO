@@ -91,6 +91,7 @@ public class MenuUsuario {
                     break;
                 case 4: 
                     
+                    
                     break;
                 case 5: 
                     cliente.getCarrito().vaciarCarrito();
@@ -112,14 +113,21 @@ public class MenuUsuario {
     }
     
     public void menuAdmin(){
-        int op;
+    Admin admin = (Admin) this.usuario;        
+    int op;
         while(true){
-            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\nModificación de precios\n3)Salir");
+            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\n2)Modificación de precios\n3)Salir");
             switch (op) {
                 case 1: {
                     System.out.print("Ingresa el nombre del producto:");
                     String nombre = lector.nextLine();
                     float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
+                    
+                    if (precio <= 0) {
+                        System.out.println("El precio debe ser mayor a 0");
+                        break;
+                    }
+                     
                     System.out.print("Ingresa el id: ");
                     String id = lector.nextLine();
                     System.out.print("Ingresa la categoría: ");
@@ -132,12 +140,21 @@ public class MenuUsuario {
                             .setCategoria(categoria)
                             .build();
                     
-                    baseDatos.agregarProducto(producto);
+                     if (admin.agregarProducto(baseDatos, producto)) {
+                        System.out.println("Producto agregado.");
+                    }
                             
                     break;
                     }
-                case 2: 
+                case 2: {
+                    baseDatos.imprimirProductos();
+                    System.out.println("Ingresa el id del producto a modificar");
+                    String id = lector.nextLine();
+                    float precio = LeerDatos.pedirFlotante("Ingresa el nuevo precio: ");
+                    
+                    admin.cambiarPrecio(baseDatos, id, precio);
                     break;
+                }
                 case 3: 
                     return;
                 default:

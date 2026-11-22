@@ -94,7 +94,7 @@ public class MenuUsuario {
                 case 1: {
                     System.out.print("Ingresa el nombre del producto:");
                     String nombre = lector.nextLine();
-                    float precio = pedirFlotante("Ingresa el precio: ");
+                    float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
                     System.out.print("Ingresa el id: ");
                     String id = lector.nextLine();
                     System.out.print("Ingresa la categoría: ");

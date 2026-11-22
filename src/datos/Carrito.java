@@ -1,5 +1,6 @@
 package datos;
-
+import usuarios.*;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -106,6 +107,10 @@ public class Carrito {
         }
         else{
             System.out.println("Domicilios:");
+            for(int i = 0; i<cliente.getListaDomicilios().size(); i++){
+                System.out.println((i+1));
+                cliente.getListaDomicilios().get(i).mostrarDomicilio();
+            }
             ArrayList<Domicilio> listadom = cliente.getListaDomicilios();
             for(int i = 0; i<listadom.size(); i++){
                 Domicilio nuevo = listadom.get(i);
@@ -117,7 +122,7 @@ public class Carrito {
             int opcion1;
             do{
                 System.out.println("¿En qué domicilio quieres que se haga la entrega? Dame el número");
-            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaDomicilios().size() || scan.nextInt() <= 0);                
+            }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMediosPago().size() || scan.nextInt() <= 0);                                
             opcion1 = scan.nextInt();
             
             System.out.println("Métodos de pago:");
@@ -130,8 +135,8 @@ public class Carrito {
                 System.out.println("¿Con qué medio quieres realizar el pago?");
             }while(!scan.hasNextInt() || scan.nextInt() > cliente.getListaMediosPago().size() || scan.nextInt() <= 0);                
             opcion2 = scan.nextInt();
-            
             return new Pedido(cliente.getListaDomicilios().get(opcion1 -1), cliente.getListaMediosPago().get(opcion2 -1), this.listaProductos);
-        }
+    }
+        
     }
 }

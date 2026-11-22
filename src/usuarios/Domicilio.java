@@ -1,4 +1,5 @@
 package usuarios;
+import java.util.Objects;
 import java.util.Scanner;
 /**
  *
@@ -50,4 +51,32 @@ public class Domicilio {
             this.numeroDeTelefono=nuevoNumeroDeTelefono;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.calle);
+        hash = 79 * hash + Objects.hashCode(this.colonia);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Domicilio other = (Domicilio) obj;
+        if (!Objects.equals(this.calle, other.calle)) {
+            return false;
+        }
+        return Objects.equals(this.colonia, other.colonia);
+    }
+    
+    
 }

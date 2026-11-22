@@ -65,40 +65,32 @@ public class MenuUsuario {
                     
                     break;
                 }
-                case 3: 
-                    //Solo se permitira un medio de pago valido
-                    if(!this.listaDePaypal.isEmpty()||!this.listaDeTarjetasDeCredito.isEmpty()){
-                        System.out.println("No puede ingresar mas de un medio de pago, lo sentimos");
-                        break;
-                    }
-                    int opcion=0;
+                case 3: {
                     System.out.println("Registrar medio de pago");
-                    while(opcion!=1&&opcion!=2){
-                        System.out.println("1.Paypal\n2.Tarjeta de credito");
-                        opcion=lector.nextInt();
+                    int tipo = 0;
+                    
+                    while (tipo != 1 && tipo != 2) {
+                        tipo = LeerDatos.pedirEntero("1) Paypal\n2) Tarjeta de crédito\n");
                     }
-                    switch(opcion){
-                    case 1:
-                        System.out.println("Favor de ingresar un correo electronico");
-                        String correoElectronico=lector.next();
-                        System.out.println("Favor de ingresar su contrasena del correo electronico");
-                        String contrasenaCorreoElectronico=lector.next();
-                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, cliente.getUser());
-                        this.listaDePaypal.add(paypal);
-                        break;
-                    case 2:
-                        System.out.println("Favor de ingresar numero de tarjeta de credito");
-                        String numeroDeTarjetaDeCredito=lector.next();
-                        System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
-                        String NIP=lector.next();
-                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(cliente.getUser(), numeroDeTarjetaDeCredito, NIP);
-                        this.listaDeTarjetasDeCredito.add(tarjetaDeCredito);
-                        break;
-                    default:
-                        System.out.println("Error, favor de ingresar alguna de las opciones");
+                    
+                    if (tipo == 1) {
+                        System.out.print("Correo electrónico: ");
+                        String correo = lector.nextLine().trim();
+                        System.out.print("Contraseña: ");
+                        String pass = lector.nextLine().trim();
+                        cliente.agregarMedioPago(new Paypal(correo, pass, cliente.getUser()));
+                        
+                    } else {
+                        System.out.print("Número de tarjeta: ");
+                        String numero = lector.nextLine().trim();
+                        System.out.print("NIP: ");
+                        String nip = lector.nextLine().trim();
+                        cliente.agregarMedioPago(new TarjetaDeCredito(cliente.getUser(), numero, nip));
+                        
+                    }
+                    System.out.println("Medio de pago registrado.");
                     break;
                     }
-                    break;
                 case 4: 
                     //Primero validamos que las listas no esten vacias
                     if(this.listaDePaypal.isEmpty()&&this.listaDeTarjetasDeCredito.isEmpty()){
@@ -106,24 +98,6 @@ public class MenuUsuario {
                         break;
                     }
                     
-                    if(!this.listaDePaypal.isEmpty()){
-                        for(int i=0;i<this.listaDePaypal.size();i++){
-                            //Encontramos el usuario mediante el alias que uso para registrarse
-                            if(this.listaDePaypal.get(i).getAlias().equals(cliente.getUser())){
-                                this.listaDePaypal.get(i).confirmarPago();
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if(!this.listaDeTarjetasDeCredito.isEmpty()){
-                       for(int i=0;i<this.listaDeTarjetasDeCredito.size();i++){
-                           if(this.listaDeTarjetasDeCredito.get(i).getAlias().equals(cliente.getUser())){
-                               this.listaDeTarjetasDeCredito.get(i).confirmarPago();
-                               break;
-                           }
-                       } 
-                    }
                     break;
                 case 5: 
                     cliente.getCarrito().vaciarCarrito();

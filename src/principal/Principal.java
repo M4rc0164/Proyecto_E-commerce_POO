@@ -92,12 +92,10 @@ public class Principal {
             return;
         }
         
-        System.out.println("Sesion iniciada correctamente");
-        MenuUsuario menuUsuario=new MenuUsuario(usuario);
-        
+        MenuUsuario menuUsuario = new MenuUsuario(usuario);
         if (usuario instanceof Admin) {
             menuUsuario.menuAdmin();
-        } else if (usuario instanceof Cliente) {
+        } else {
             menuUsuario.menuCliente();
         }
     }

@@ -55,7 +55,6 @@ public class Producto {
         }
     }
 
-    // Getters
     public String getNombre() {
         return nombre;
     }

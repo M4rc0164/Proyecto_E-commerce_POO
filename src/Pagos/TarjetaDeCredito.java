@@ -5,6 +5,7 @@ import java.util.Scanner;
  * @author Velazquez De Jesus Dante Yabe
  */
 public class TarjetaDeCredito extends MedioDePago{
+    private boolean confirmacion;
     private String numeroDeTarjetaDeCredito;
     private String NIP;
 
@@ -32,9 +33,9 @@ public class TarjetaDeCredito extends MedioDePago{
 
     @Override
     public boolean confirmarPago() {
-        if(confirmarPago()==true){
+        if(this.confirmacion==true){
             System.out.println("El pago ya ha sido confirmado");
-            return true;
+            return this.confirmacion=true;
         }
         Scanner lector=new Scanner(System.in);
         System.out.println("Confirmando pago");
@@ -44,13 +45,13 @@ public class TarjetaDeCredito extends MedioDePago{
             String confirmacionDeNIP=lector.next();
             if(this.NIP.equals(confirmacionDeNIP)){
                 System.out.println("Pago realizado exitosamente");
-                return true;
+                return this.confirmacion=true;
             }else{
                 System.out.println("Error, la contraseña no coincide, si quiere confirmar la compra, favor de ingresar de nuevo");
-                return false;
+                return this.confirmacion=false;
             }
         }
         System.out.println("Faltan datos para realizar la compra");
-        return false;
+        return this.confirmacion=false;
     } 
 }

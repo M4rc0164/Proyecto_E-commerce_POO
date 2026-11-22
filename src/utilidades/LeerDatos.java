@@ -30,4 +30,22 @@ public class LeerDatos {
 
         return x; 
     }
+    
+    public static float pedirFlotante(String mensaje) {
+        float x = 0;
+        boolean validador;
+
+        do {
+            System.out.print(mensaje);
+            validador = lector.hasNextFloat();
+
+            if (validador) {
+                x = lector.nextFloat();
+            } 
+            lector.nextLine(); 
+            
+        } while (!validador);
+
+        return x; 
+    }
 }

@@ -4,6 +4,8 @@
  */
 package usuarios;
 
+import Pagos.Paypal;
+import Pagos.TarjetaDeCredito;
 import datos.*;
 import java.util.Scanner;
 import utilidades.LeerDatos;
@@ -61,8 +63,31 @@ public class MenuUsuario {
                     break;
                 }
                 case 3: 
-                    
-                    
+                    int opcion=0;
+                    System.out.println("Registrar forma de pago");
+                    while(opcion!=1&&opcion!=2){
+                        System.out.println("1. Paypal\n2.Tarjeta de credito");
+                        opcion=lector.nextInt();
+                    }
+                    switch(opcion){
+                    case 1:
+                        System.out.println("Favor de ingresar un correo electronico");
+                        String correoElectronico=lector.next();
+                        System.out.println("Favor de ingresar su contrasena del correo electronico");
+                        String contrasenaCorreoElectronico=lector.next();
+                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, user);
+                        break;
+                    case 2:
+                        System.out.println("Favor de ingresar numero de tarjeta de credito");
+                        String numeroDeTarjetaDeCredito=lector.next();
+                        System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
+                        String NIP=lector.next();
+                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(user, numeroDeTarjetaDeCredito, NIP);
+                        break;
+                    default:
+                        System.out.println("Favor de ingresar alguna de las opciones");
+                    break;
+                    }
                     break;
                 case 4: 
                     
@@ -94,7 +119,7 @@ public class MenuUsuario {
                 case 1: {
                     System.out.print("Ingresa el nombre del producto:");
                     String nombre = lector.nextLine();
-                    float precio = pedirFlotante("Ingresa el precio: ");
+                    float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
                     System.out.print("Ingresa el id: ");
                     String id = lector.nextLine();
                     System.out.print("Ingresa la categoría: ");

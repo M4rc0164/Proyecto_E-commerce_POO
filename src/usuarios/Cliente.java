@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package usuarios;
-
+import Pagos.*;
+import java.util.ArrayList;
 import Pagos.*;
 import datos.*;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public class Cliente extends Usuario{
     ArrayList<Domicilio> listaDomicilios;
     ArrayList<Pedido> listaPedido;
     ArrayList<MedioDePago> listaMediosPago;
-    
     Carrito carrito;
     
     public Cliente(String user, String nombre, String password) {
@@ -27,20 +27,36 @@ public class Cliente extends Usuario{
         this.carrito = new Carrito();
     }
 
-    public Carrito getCarrito() {
-        return carrito;
-    }
-
     public ArrayList<Domicilio> getListaDomicilios() {
         return listaDomicilios;
+    }
+
+    public void setListaDomicilios(ArrayList<Domicilio> listaDomicilios) {
+        this.listaDomicilios = listaDomicilios;
     }
 
     public ArrayList<Pedido> getListaPedido() {
         return listaPedido;
     }
 
+    public void setListaPedido(ArrayList<Pedido> listaPedido) {
+        this.listaPedido = listaPedido;
+    }
+
     public ArrayList<MedioDePago> getListaMediosPago() {
         return listaMediosPago;
+    }
+
+    public void setListaMediosPago(ArrayList<MedioDePago> listaMediosPago) {
+        this.listaMediosPago = listaMediosPago;
+    }
+
+    public Carrito getCarrito() {
+        return carrito;
+    }
+
+    public void setCarrito(Carrito carrito) {
+        this.carrito = carrito;
     }
     
     public boolean agregarDomicilio(Domicilio domicilio) {
@@ -60,6 +76,5 @@ public class Cliente extends Usuario{
         listaMediosPago.add(medioPago);
         return true;
     }
-    
     
 }

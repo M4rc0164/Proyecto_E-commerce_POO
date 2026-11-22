@@ -18,4 +18,6 @@ public abstract class MedioDePago {
         this.alias = alias;
     }
     public abstract boolean confirmarPago();
+    // Método abstracto agregado para mostrar cada medio de pago en menús y tickets
+    public abstract String getDescripcionTicket();
 }

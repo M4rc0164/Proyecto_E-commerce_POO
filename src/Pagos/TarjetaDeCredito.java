@@ -31,7 +31,6 @@ public class TarjetaDeCredito extends MedioDePago{
         this.NIP = NIP;
     }
 
-    // Implementación que enmascara los últimos 4 dígitos para menús y tickets
     @Override
     public String getDescripcionTicket() {
         if (this.numeroDeTarjetaDeCredito == null || this.numeroDeTarjetaDeCredito.length() <= 4) {
@@ -41,8 +40,6 @@ public class TarjetaDeCredito extends MedioDePago{
         return "Tarjeta de crédito (**** **** **** " + ultimos4 + ")";
     }
 
-    // Se eliminó el atributo booleano "confirmacion" permanente para que valide el NIP en cada compra,
-    // se usa LeerDatos.pedirTexto() para evitar múltiples Scanner y se corrigió el mensaje de error (decía contraseña en vez de NIP)
     @Override
     public boolean confirmarPago() {
         System.out.println("Confirmando pago");
@@ -61,7 +58,6 @@ public class TarjetaDeCredito extends MedioDePago{
         return false;
     }
 
-    // Se agregaron hashCode y equals por número de tarjeta para que Cliente.agregarMedioPago() detecte tarjetas duplicadas
     @Override
     public int hashCode() {
         return Objects.hash(this.numeroDeTarjetaDeCredito);

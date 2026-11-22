@@ -5,7 +5,7 @@ import java.util.Scanner;
  * @author Velazquez De Jesus Dante Yabe
  */
 public class TarjetaDeCredito extends MedioDePago{
-    private boolean confirmacion;
+    private boolean confirmacion=false;
     private String numeroDeTarjetaDeCredito;
     private String NIP;
 

@@ -11,6 +11,8 @@ import datos.*;
  * @author EdelM
  */
 public class Cliente extends Usuario{
+    ArrayLisy<Domicilio> listaDomicilios;
+    
     Carrito carrito;
     
     public Cliente(String user, String nombre, String password) {

@@ -34,7 +34,7 @@ public class MenuUsuario {
         int op;
         
         while(true){
-            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7) Imprimir ticket de un pedido\n8)Salir");
+            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7) Imprimir ticket de un pedido\n8)Salir\n");
             switch (op) {
                 case 1: {
                     this.baseDatos.imprimirProductos();
@@ -66,10 +66,15 @@ public class MenuUsuario {
                     break;
                 }
                 case 3: 
+                    //Solo se permitira un medio de pago valido
+                    if(!this.listaDePaypal.isEmpty()||!this.listaDeTarjetasDeCredito.isEmpty()){
+                        System.out.println("No puede ingresar mas de un medio de pago, lo sentimos");
+                        break;
+                    }
                     int opcion=0;
                     System.out.println("Registrar medio de pago");
                     while(opcion!=1&&opcion!=2){
-                        System.out.println("1. Paypal\n2.Tarjeta de credito");
+                        System.out.println("1.Paypal\n2.Tarjeta de credito");
                         opcion=lector.nextInt();
                     }
                     switch(opcion){
@@ -109,21 +114,17 @@ public class MenuUsuario {
                                 break;
                             }
                         }
-                    }else{
-                        System.out.println("No hay usuarios registrados en medios de pago de paypal");
                     }
                     
                     if(!this.listaDeTarjetasDeCredito.isEmpty()){
                        for(int i=0;i<this.listaDeTarjetasDeCredito.size();i++){
-                           if(this.listaDeTarjetasDeCredito.get(i).getAlias().equals(cliente.getNombre())){
+                           if(this.listaDeTarjetasDeCredito.get(i).getAlias().equals(cliente.getUser())){
                                this.listaDeTarjetasDeCredito.get(i).confirmarPago();
                                break;
                            }
                        } 
-                    }else{
-                        System.out.println("No hay usuarios registrados en medios de pago de tarjeta de credito");
                     }
-                    
+                    break;
                 case 5: 
                     cliente.getCarrito().vaciarCarrito();
                     break;

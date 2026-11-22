@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Paypal extends MedioDePago{
     private String correoElectronico;
     private String contraseña;
+    private boolean confirmacion=false;
 
     public Paypal(String correoElectronico, String contraseña, String alias) {
         super(alias);
@@ -31,19 +32,28 @@ public class Paypal extends MedioDePago{
     }
 
     @Override
-    public void confirmarPago() {
+    public boolean confirmarPago() {
+        if(this.confirmacion==true){
+            System.out.println("El pago ya ha sido confirmado");
+            return this.confirmacion=true;
+        }
         Scanner lector=new Scanner(System.in);
         System.out.println("Confirmando pago");
         if(this.contraseña!=null&&this.correoElectronico!=null&&this.getAlias()!=null){
             System.out.println("Favor de confirmar la constraseña de su correo electronico");
-            System.out.println("Su correo es: "+this.correoElectronico+"La contraseña es: ");
+            System.out.println("Su correo es: "+this.correoElectronico);
+            System.out.println("Ingresa la contraseña: ");
             String confirmacionDeContraseña=lector.next();
-            if(!this.contraseña.equals(confirmacionDeContraseña)){
+            if(this.contraseña.equals(confirmacionDeContraseña)){
                 System.out.println("Pago realizado exitosamente");
+                return this.confirmacion=true;
+            }else{
+                System.out.println("Contraseña incorrecta, favor de intentar de ingresar de nuevo si quiere confirmar su compra");
+                return this.confirmacion=false;
             }
-        }else{
-            System.out.println("Faltan datos para realizar la compra");
         }
+        System.out.println("Faltan datos para realizar la compra");
+        return this.confirmacion=false;
     }
     
 }

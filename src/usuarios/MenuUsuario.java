@@ -5,7 +5,9 @@
 package usuarios;
 
 import Pagos.Paypal;
+import java.util.ArrayList;
 import Pagos.TarjetaDeCredito;
+import usuarios.*;
 import datos.*;
 import java.util.Scanner;
 import utilidades.LeerDatos;
@@ -15,6 +17,8 @@ import utilidades.LeerDatos;
  * @author EdelM
  */
 public class MenuUsuario {
+    ArrayList <Paypal> listaDePaypal=new ArrayList<>();
+    ArrayList <TarjetaDeCredito> listaDeTarjetasDeCredito=new ArrayList<>();
     private Scanner lector;
     private Usuario usuario;
     private BaseDatos baseDatos;
@@ -30,7 +34,7 @@ public class MenuUsuario {
         int op;
         
         while(true){
-            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7) Imprimir ticket de un pedido\n8)Salir");
+            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7) Imprimir ticket de un pedido\n8)Salir\n");
             switch (op) {
                 case 1: {
                     this.baseDatos.imprimirProductos();
@@ -43,7 +47,6 @@ public class MenuUsuario {
                     }
                     
                     cliente.getCarrito().agregarProducto(producto);
-                    
                     break;
                     }
                 case 2: {
@@ -89,6 +92,11 @@ public class MenuUsuario {
                     break;
                     }
                 case 4: 
+                    //Primero validamos que las listas no esten vacias
+                    if(this.listaDePaypal.isEmpty()&&this.listaDeTarjetasDeCredito.isEmpty()){
+                        System.out.println("No hay medios de pago registrados");
+                        break;
+                    }
                     
                     break;
                 case 5: 

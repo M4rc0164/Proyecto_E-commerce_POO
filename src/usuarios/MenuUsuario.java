@@ -5,7 +5,9 @@
 package usuarios;
 
 import Pagos.Paypal;
+import java.util.ArrayList;
 import Pagos.TarjetaDeCredito;
+import usuarios.*;
 import datos.*;
 import java.util.Scanner;
 import utilidades.LeerDatos;
@@ -15,6 +17,8 @@ import utilidades.LeerDatos;
  * @author EdelM
  */
 public class MenuUsuario {
+    ArrayList <Paypal> listaDePaypal=new ArrayList<>();
+    ArrayList <TarjetaDeCredito> listaDeTarjetasDeCredito=new ArrayList<>();
     private Scanner lector;
     private Usuario usuario;
     private BaseDatos baseDatos;
@@ -43,7 +47,6 @@ public class MenuUsuario {
                     }
                     
                     cliente.getCarrito().agregarProducto(producto);
-                    
                     break;
                     }
                 case 2: {
@@ -64,7 +67,7 @@ public class MenuUsuario {
                 }
                 case 3: 
                     int opcion=0;
-                    System.out.println("Registrar forma de pago");
+                    System.out.println("Registrar medio de pago");
                     while(opcion!=1&&opcion!=2){
                         System.out.println("1. Paypal\n2.Tarjeta de credito");
                         opcion=lector.nextInt();
@@ -75,24 +78,52 @@ public class MenuUsuario {
                         String correoElectronico=lector.next();
                         System.out.println("Favor de ingresar su contrasena del correo electronico");
                         String contrasenaCorreoElectronico=lector.next();
-                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, user);
+                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, cliente.getUser());
+                        this.listaDePaypal.add(paypal);
                         break;
                     case 2:
                         System.out.println("Favor de ingresar numero de tarjeta de credito");
                         String numeroDeTarjetaDeCredito=lector.next();
                         System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
                         String NIP=lector.next();
-                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(user, numeroDeTarjetaDeCredito, NIP);
+                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(cliente.getUser(), numeroDeTarjetaDeCredito, NIP);
+                        this.listaDeTarjetasDeCredito.add(tarjetaDeCredito);
                         break;
                     default:
-                        System.out.println("Favor de ingresar alguna de las opciones");
+                        System.out.println("Error, favor de ingresar alguna de las opciones");
                     break;
                     }
                     break;
                 case 4: 
+                    //Primero validamos que las listas no esten vacias
+                    if(this.listaDePaypal.isEmpty()&&this.listaDeTarjetasDeCredito.isEmpty()){
+                        System.out.println("No hay medios de pago registrados");
+                        break;
+                    }
                     
+                    if(!this.listaDePaypal.isEmpty()){
+                        for(int i=0;i<this.listaDePaypal.size();i++){
+                            //Encontramos el usuario mediante el alias que uso para registrarse
+                            if(this.listaDePaypal.get(i).getAlias().equals(cliente.getUser())){
+                                this.listaDePaypal.get(i).confirmarPago();
+                                break;
+                            }
+                        }
+                    }else{
+                        System.out.println("No hay usuarios registrados en medios de pago de paypal");
+                    }
                     
-                    break;
+                    if(!this.listaDeTarjetasDeCredito.isEmpty()){
+                       for(int i=0;i<this.listaDeTarjetasDeCredito.size();i++){
+                           if(this.listaDeTarjetasDeCredito.get(i).getAlias().equals(cliente.getNombre())){
+                               this.listaDeTarjetasDeCredito.get(i).confirmarPago();
+                               break;
+                           }
+                       } 
+                    }else{
+                        System.out.println("No hay usuarios registrados en medios de pago de tarjeta de credito");
+                    }
+                    
                 case 5: 
                     cliente.getCarrito().vaciarCarrito();
                     break;

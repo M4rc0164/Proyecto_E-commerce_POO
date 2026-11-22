@@ -4,6 +4,8 @@
  */
 package usuarios;
 
+import datos.*;
+
 /**
  *
  * @author EdelM
@@ -14,7 +16,30 @@ public class Admin extends Usuario{
         super(user, nombre, password);
     }
     
-    //cambiarPrecio
-    
-    //agregarProducto
+    public boolean agregarProducto(BaseDatos baseDatos, Producto producto) {
+        if (baseDatos.buscarProducto(producto.getId()) != null) {
+            System.out.println("Ya existe un producto con ese id");
+            return false;
+        }
+        baseDatos.agregarProducto(producto);
+        return true;
+    }
+
+    public boolean cambiarPrecio(BaseDatos baseDatos, String id, float nuevoPrecio) {
+        
+        
+        if (nuevoPrecio <= 0) {
+            System.out.println("El precio debe ser mayor a 0");
+            return false;
+        }
+        
+        Producto producto = baseDatos.buscarProducto(id);
+        if (producto == null) {
+            System.out.println("No existe un producto con ese id");
+            return false;
+        }
+        
+        producto.setPrecio(nuevoPrecio);
+        return true;
+    }
 }

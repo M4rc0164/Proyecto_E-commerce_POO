@@ -23,9 +23,6 @@ public class MenuUsuario {
         this.baseDatos = BaseDatos.getBaseDatos();
     }
 
-    
-    
-    
     public void menuCliente(){
         Cliente cliente = (Cliente) this.usuario;
         int op;
@@ -47,13 +44,31 @@ public class MenuUsuario {
                     
                     break;
                     }
-                case 2: 
+                case 2: {
+                    System.out.print("Ingresa la calle: ");
+                    String calle = lector.nextLine().trim();
+                    System.out.print("Ingresa la colonia: ");
+                    String colonia = lector.nextLine().trim();
+                    System.out.print("ngresa el teléfono: ");
+                    String telefono = lector.nextLine().trim();
+                            
+                    Domicilio domicilio = new Domicilio(calle, colonia, telefono);
+
+                    if (cliente.agregarDomicilio(domicilio)) {
+                        System.out.println("Domicilio registrado correctamente.");
+                    }
+                    
                     break;
+                }
                 case 3: 
+                    
+                    
                     break;
                 case 4: 
+                    
                     break;
                 case 5: 
+                    cliente.getCarrito().vaciarCarrito();
                     break;
                 case 6: 
                     cliente.getCarrito().mostrarCarrito();
@@ -76,8 +91,26 @@ public class MenuUsuario {
         while(true){
             op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\nModificación de precios\n3)Salir");
             switch (op) {
-                case 1: 
+                case 1: {
+                    System.out.print("Ingresa el nombre del producto:");
+                    String nombre = lector.nextLine();
+                    float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
+                    System.out.print("Ingresa el id: ");
+                    String id = lector.nextLine();
+                    System.out.print("Ingresa la categoría: ");
+                    String categoria = lector.nextLine();
+                    
+                    Producto producto = new Producto.Builder()
+                            .setNombre(nombre)
+                            .setPrecio(precio)
+                            .setId(id)
+                            .setCategoria(categoria)
+                            .build();
+                    
+                    baseDatos.agregarProducto(producto);
+                            
                     break;
+                    }
                 case 2: 
                     break;
                 case 3: 

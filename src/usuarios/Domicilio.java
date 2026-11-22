@@ -78,5 +78,10 @@ public class Domicilio {
         return Objects.equals(this.colonia, other.colonia);
     }
     
-    
+    public void mostrarDomicilio(){
+        System.out.println("El domicilio del usuario es: ");
+        System.out.println("Calle: "+this.calle);
+        System.out.println("Colonia: "+this.colonia);
+        System.out.println("Numero de telefono: "+this.numeroDeTelefono);
+    }
 }

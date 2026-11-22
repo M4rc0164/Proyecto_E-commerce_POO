@@ -22,14 +22,13 @@ public class Pedido {
     private Domicilio domicilio;
     private MedioDePago mediopago;
     private LocalDate fechaEntrega;
-    
-    public Pedido(Cliente cliente, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos){
+    public Pedido(Cliente cliente, MedioDePago mediopago, HashMap<Integer,Producto> listaproductos, Domicilio domicilio){
         this.listaProductos = listaproductos;
         this.fechaPedido = LocalDate.now();
         for(int i=0; i<listaproductos.size(); i++){
             this.monto += listaproductos.get(i).getPrecio();
         }
-        this.domicilio = Cliente.getDomicilio();
+        this.domicilio = domicilio;
         this.mediopago = mediopago;
         Random aleatorio = new Random();
         this.fechaEntrega = LocalDate.now().plusDays(aleatorio.nextInt(1,8));
@@ -74,11 +73,14 @@ public class Pedido {
             escritura.write("Colonia: "+ this.domicilio.getColonia()+ "\n");
             escritura.write("Teléfono: "+ this.domicilio.getNumeroDeTelefono()+ "\n");
             escritura.write("Medio de pago: "+ this.mediopago.getAlias()+ "\n");
-            if(mediopago.getAlias().equals("Tarjeta")){
-                escritura.write("**** **** **** "+ this.mediopago.getAlias().substring(16,this.mediopago.getAlias().size())+ "\n");
+            if(this.mediopago.getAlias().equals("Tarjeta")){
+                escritura.write("**** **** **** "+ this.mediopago.getAlias().substring(16,this.mediopago.getAlias().length())+ "\n");
             }
-            else if(mediopago.getAlias().equals("Paypal")){
-                escritura.write("Correo: "+ this.mediopago.getCorreo() + "\n");
+            else if(this.mediopago.getAlias().equals("Paypal")){
+                if(this.mediopago instanceof Paypal){
+                    Paypal paypal=(Paypal) this.mediopago;
+                    escritura.write("Correo: "+ paypal.getCorreoElectronico()+ "\n");
+                }
             }
             escritura.close();
         } catch (IOException ex) {

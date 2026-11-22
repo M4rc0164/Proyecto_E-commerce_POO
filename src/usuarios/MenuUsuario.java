@@ -6,6 +6,7 @@ package usuarios;
 
 import Pagos.Paypal;
 import Pagos.TarjetaDeCredito;
+import usuarios.*;
 import datos.*;
 import java.util.Scanner;
 import utilidades.LeerDatos;
@@ -75,14 +76,12 @@ public class MenuUsuario {
                         String correoElectronico=lector.next();
                         System.out.println("Favor de ingresar su contrasena del correo electronico");
                         String contrasenaCorreoElectronico=lector.next();
-                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, user);
                         break;
                     case 2:
                         System.out.println("Favor de ingresar numero de tarjeta de credito");
                         String numeroDeTarjetaDeCredito=lector.next();
                         System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
                         String NIP=lector.next();
-                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(user, numeroDeTarjetaDeCredito, NIP);
                         break;
                     default:
                         System.out.println("Favor de ingresar alguna de las opciones");

@@ -119,6 +119,7 @@ public class Principal {
         
         System.out.println("Sesion iniciada correctamente");
         MenuUsuario menuUsuario=new MenuUsuario(usuario);
+        menuUsuario.menuCliente();
         return usuario;
     }
     

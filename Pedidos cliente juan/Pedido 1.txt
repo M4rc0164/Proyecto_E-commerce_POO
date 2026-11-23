@@ -1,0 +1,12 @@
+Pedido 1
+Cliente: Juan Perez (juan)
+Productos:
+1. Audifonos Bluetooth (ID: P004) | Cantidad: 1 | Precio unitario: $899.99 | Subtotal: $899.99
+Monto total: $899.99
+Fecha de pedido: 2026-11-22
+Fecha de entrega: 2026-11-25
+Domicilio:
+Calle: Av. Universidad 3000
+Colonia: Copilco
+Teléfono: 5512345678
+Medio de pago: Tarjeta de crédito (**** **** **** 5678)

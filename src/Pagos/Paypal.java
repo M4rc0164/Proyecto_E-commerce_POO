@@ -1,5 +1,6 @@
 package Pagos;
-import java.util.Scanner;
+import java.util.Objects;
+import utilidades.LeerDatos;
 /**
  *
  * @author Velazquez De Jesus Dante Yabe
@@ -7,7 +8,6 @@ import java.util.Scanner;
 public class Paypal extends MedioDePago{
     private String correoElectronico;
     private String contraseña;
-    private boolean confirmacion=false;
 
     public Paypal(String correoElectronico, String contraseña, String alias) {
         super(alias);
@@ -31,29 +31,49 @@ public class Paypal extends MedioDePago{
         this.contraseña = contraseña;
     }
 
+    // Implementación para mostrar la cuenta PayPal en el menú y en el ticket
+    @Override
+    public String getDescripcionTicket() {
+        return "PayPal (" + this.correoElectronico + ")";
+    }
+
+    // Se eliminó el atributo booleano "confirmacion" permanente para que solicite la contraseña en cada compra nueva,
+    // y se usa LeerDatos.pedirTexto() 
     @Override
     public boolean confirmarPago() {
-        if(this.confirmacion==true){
-            System.out.println("El pago ya ha sido confirmado");
-            return this.confirmacion=true;
-        }
-        Scanner lector=new Scanner(System.in);
         System.out.println("Confirmando pago");
         if(this.contraseña!=null&&this.correoElectronico!=null&&this.getAlias()!=null){
-            System.out.println("Favor de confirmar la constraseña de su correo electronico");
+            System.out.println("Favor de confirmar la contraseña de su correo electronico");
             System.out.println("Su correo es: "+this.correoElectronico);
-            System.out.println("Ingresa la contraseña: ");
-            String confirmacionDeContraseña=lector.next();
+            String confirmacionDeContraseña=LeerDatos.pedirTexto("Ingresa la contraseña: ");
             if(this.contraseña.equals(confirmacionDeContraseña)){
                 System.out.println("Pago realizado exitosamente");
-                return this.confirmacion=true;
+                return true;
             }else{
                 System.out.println("Contraseña incorrecta, favor de intentar de ingresar de nuevo si quiere confirmar su compra");
-                return this.confirmacion=false;
+                return false;
             }
         }
         System.out.println("Faltan datos para realizar la compra");
-        return this.confirmacion=false;
+        return false;
+    }
+
+    // Se agregaron hashCode y equals por correo para que Cliente.agregarMedioPago() detecte cuentas repetidas
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.correoElectronico);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final Paypal other = (Paypal) obj;
+        return Objects.equals(this.correoElectronico, other.correoElectronico);
     }
     
 }

@@ -1,0 +1,12 @@
+Pedido 2
+Cliente: Donovan (dono)
+Productos:
+1. Audifonos Bluetooth (ID: P004) | Cantidad: 1 | Precio unitario: $899.99 | Subtotal: $899.99
+Monto total: $899.99
+Fecha de pedido: 2026-11-22
+Fecha de entrega: 2026-11-23
+Domicilio:
+Calle: Calle Sin Nombre
+Colonia: Santo Domingo
+Teléfono: 23322323
+Medio de pago: Tarjeta de crédito (**** **** **** 2323)

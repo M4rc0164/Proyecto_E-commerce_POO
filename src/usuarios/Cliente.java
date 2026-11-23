@@ -4,8 +4,6 @@
  */
 package usuarios;
 import Pagos.*;
-import java.util.ArrayList;
-import Pagos.*;
 import datos.*;
 import java.util.ArrayList;
 

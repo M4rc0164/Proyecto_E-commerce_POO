@@ -4,193 +4,267 @@
  */
 package usuarios;
 
-import Pagos.Paypal;
-import java.util.ArrayList;
-import Pagos.TarjetaDeCredito;
-import usuarios.*;
+import Pagos.*;
 import datos.*;
-import java.util.Scanner;
-import utilidades.LeerDatos;
+import java.util.ArrayList;
+import utilidades.*;
 
 /**
  *
  * @author EdelM
  */
 public class MenuUsuario {
-    private Scanner lector;
     private Usuario usuario;
     private BaseDatos baseDatos;
 
     public MenuUsuario(Usuario usuario) {
-        this.lector = new Scanner(System.in);
         this.usuario = usuario;
         this.baseDatos = BaseDatos.getBaseDatos();
     }
 
+    // Se mantiene el ciclo while con opción 8) Salir para que el cliente permanezca en su menú tras cada operación
     public void menuCliente(){
         Cliente cliente = (Cliente) this.usuario;
         int op;
-        
         while(true){
-            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilo\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7)Imprimir ticket de un pedido\n8)Salir\n");
+            op = LeerDatos.pedirEntero("==Cliente==\n1)Agregar producto al carrito\n2)Registrar domicilio\n3)Registrar medio de Pago\n4)Confirmar pedido\n5)Vaciar carrito\n6)Consultar carrito\n7)Imprimir ticket de un pedido\n8)Salir\nSeleccione una opción: ");
             switch (op) {
-                case 1: {
-                    this.baseDatos.imprimirProductos();
-                    
-                    System.out.print("Ingresa el id del producto que se añadirá al carrito: ");
-                    String l = lector.nextLine();
-                    Producto producto = this.baseDatos.buscarProducto(l);
-                    if(producto == null){
-                        System.out.println("No existe un producto con ese id");
-                        break;
-                    }
-                    cliente.getCarrito().agregarProducto(producto);
-                    
-                    break;
-                    }
-                case 2: {
-                    System.out.print("Ingresa la calle: ");
-                    String calle = lector.nextLine().trim();
-                    System.out.print("Ingresa la colonia: ");
-                    String colonia = lector.nextLine().trim();
-                    System.out.print("Ingresa el teléfono: ");
-                    String telefono = lector.nextLine().trim();
-                            
-                    Domicilio domicilio = new Domicilio(calle, colonia, telefono);
-
-                    if (cliente.agregarDomicilio(domicilio)) {
-                        System.out.println("Domicilio registrado correctamente.");
-                    }
-                    
+            case 1: {
+                // Se verifica inventario vacío antes de pedir el ID
+                if (this.baseDatos.inventarioVacio()) {
+                    System.out.println("No hay productos registrados");
                     break;
                 }
-                case 3: 
-                    int opcion=0;
-                    System.out.println("Registrar medio de pago");
-                    while(opcion!=1&&opcion!=2){
-                        System.out.println("1.Paypal\n2.Tarjeta de credito");
-                        opcion=lector.nextInt();
-                    }
-                    switch(opcion){
-                    case 1:
-                        System.out.println("Favor de ingresar un correo electronico");
-                        String correoElectronico=lector.next();
-                        System.out.println("Favor de ingresar su contrasena del correo electronico");
-                        String contrasenaCorreoElectronico=lector.next();
-                        Paypal paypal=new Paypal(correoElectronico, contrasenaCorreoElectronico, cliente.getUser());
-                        cliente.getListaMediosPago().add(paypal);
-                        break;
-                    case 2:
-                        System.out.println("Favor de ingresar numero de tarjeta de credito");
-                        String numeroDeTarjetaDeCredito=lector.next();
-                        System.out.println("Favor de ingresar el NIP de su tarjeta de credito");
-                        String NIP=lector.next();
-                        TarjetaDeCredito tarjetaDeCredito=new TarjetaDeCredito(cliente.getUser(), numeroDeTarjetaDeCredito, NIP);
-                        cliente.getListaMediosPago().add(tarjetaDeCredito);
-                        break;
-                    default:
-                        System.out.println("Error, favor de ingresar alguna de las opciones");
+                this.baseDatos.imprimirProductos();
+                
+                String idProd = LeerDatos.pedirTexto("Ingresa el id del producto que se añadirá al carrito: ");
+                Producto producto = this.baseDatos.buscarProducto(idProd);
+                if(producto == null){
+                    System.out.println("No existe un producto con ese id");
                     break;
-                    }
+                }
+                // Agregado: solicitar y validar cantidad > 0 (antes siempre agregaba 1 unidad)
+                int cantidad = LeerDatos.pedirEntero("Ingresa la cantidad de unidades: ");
+                if (cantidad <= 0) {
+                    System.out.println("La cantidad debe ser mayor a 0");
                     break;
-                case 4:                     
-                    Pedido pedido = cliente.getCarrito().confirmarPedido(cliente);
-                    cliente.getListaPedido().add(pedido);
-                    pedido.imprimirPedido(cliente);
-                    break;
-                case 5: 
-                    cliente.getCarrito().vaciarCarrito();
-                    break;
-                case 6: 
-                    cliente.getCarrito().mostrarCarrito();
-                    break;
-                case 7: 
-                    if(cliente.getListaPedido().isEmpty()){
-                        System.out.println("No hay pedidos aún.");
-                        break;
-                    }
-                    ArrayList<Pedido> pedidos = cliente.getListaPedido();
-                    System.out.println("Pedidos realizados");
-                    for(int i=0; i<pedidos.size(); i++){
-                        System.out.print(i+1);
-                        System.out.println(pedidos.get(i).getFechaPedido());
-                        System.out.println("Productos: ");
-                        int j=1;
-                        for(Producto p: cliente.getListaPedido().get(i).getListaProductos().values()){
-                            System.out.println("   "+ (j) + " "+ p.getNombre());
-                        }
-                    }
-                    int opt;
-                    do{
-                        System.out.println("¿Qué pedido quieres imprimir? Dame el número");
-                        if(!lector.hasNextInt()){
-                            System.out.println("Ingresa un número.");
-                            lector.next();
-                        }
-                        opt = lector.nextInt();
-                    }while(opt > cliente.getListaPedido().size() || opt <= 0);
-                    opt = lector.nextInt();
-                    cliente.getListaPedido().get(opt-1).imprimirPedido(cliente);
-                    break;
-                case 8: 
-                    return;
-                default:
-                    System.out.println("Opción incorrecta");
+                }
+                
+                cliente.getCarrito().agregarProducto(producto, cantidad);
+                System.out.println("Producto agregado al carrito.");
+                break;
             }
-        
+            case 2: {
+                String calle = LeerDatos.pedirTexto("Ingresa la calle: ");
+                String colonia = LeerDatos.pedirTexto("Ingresa la colonia: ");
+                String telefono = LeerDatos.pedirTexto("Ingresa el teléfono: ");
+                // Se agregó validación para evitar registrar domicilios con calle o colonia vacías
+                if (calle.isEmpty() || colonia.isEmpty()) {
+                    System.out.println("La calle y la colonia son obligatorias.");
+                    break;
+                }
+                        
+                Domicilio domicilio = new Domicilio(calle, colonia, telefono);
+
+                if (cliente.agregarDomicilio(domicilio)) {
+                    System.out.println("Domicilio registrado correctamente.");
+                }
+                
+                break;
+            }
+            case 3: {
+                System.out.println("Registrar medio de pago");
+                int tipo = 0;
+                
+                while (tipo != 1 && tipo != 2) {
+                    tipo = LeerDatos.pedirEntero("1) Paypal\n2) Tarjeta de crédito\nSeleccione una opción: ");
+                }
+                
+                // Se valida que los campos no estén vacíos, se asigna alias descriptivo ("Paypal"/"Tarjeta")
+                // y se revisa el retorno de agregarMedioPago() para no imprimir éxito cuando es duplicado
+                boolean registrado = false;
+                if (tipo == 1) {
+                    String correo = LeerDatos.pedirTexto("Correo electrónico: ");
+                    String pass = LeerDatos.pedirTexto("Contraseña: ");
+                    if (correo.isEmpty() || pass.isEmpty()) {
+                        System.out.println("Correo y contraseña no pueden estar vacíos.");
+                        break;
+                    }
+                    registrado = cliente.agregarMedioPago(new Paypal(correo, pass, "Paypal"));
+                    
+                } else {
+                    String numero = LeerDatos.pedirTexto("Número de tarjeta: ");
+                    String nip = LeerDatos.pedirTexto("NIP: ");
+                    if (numero.isEmpty() || nip.isEmpty()) {
+                        System.out.println("Número de tarjeta y NIP no pueden estar vacíos.");
+                        break;
+                    }
+                    registrado = cliente.agregarMedioPago(new TarjetaDeCredito("Tarjeta", numero, nip));
+                    
+                }
+                if (registrado) {
+                    System.out.println("Medio de pago registrado.");
+                }
+                break;
+            }
+            case 4: {
+                // el case 4 estaba vacío
+                confirmarPedido(cliente);
+                break;
+            }
+            case 5: {
+                cliente.getCarrito().vaciarCarrito();
+                // Se agregó mensaje de confirmación al usuario
+                System.out.println("Carrito vaciado correctamente.");
+                break;
+            }
+            case 6: {
+                cliente.getCarrito().mostrarCarrito();
+                break;
+            }
+            case 7: {
+                // el case 7 estaba vacío
+                imprimirTicketHistorico(cliente);
+                break;
+            }
+            case 8: // Permite cerrar sesión y regresar al menú principal cuando el cliente lo indique
+                return;
+            default:
+                System.out.println("Opción incorrecta");
+            }
         }
-        
+    }
+
+    // Método agregado valida las 3 precondiciones (carrito, domicilio y medio de pago),
+    // autentica con confirmarPago(), guarda el pedido, genera el ticket .txt y vacía el carrito
+    private void confirmarPedido(Cliente cliente) {
+        if (cliente.getCarrito().estaVacio()) {
+            System.out.println("No se puede confirmar el pedido: el carrito está vacío.");
+            return;
+        }
+        ArrayList<Domicilio> domicilios = cliente.getListaDomicilios();
+        if (domicilios.isEmpty()) {
+            System.out.println("No se puede confirmar el pedido: debes registrar al menos un domicilio.");
+            return;
+        }
+        ArrayList<MedioDePago> mediosPago = cliente.getListaMediosPago();
+        if (mediosPago.isEmpty()) {
+            System.out.println("No se puede confirmar el pedido: debes registrar al menos un medio de pago.");
+            return;
+        }
+
+        System.out.println("Domicilios registrados:");
+        for (int i = 0; i < domicilios.size(); i++) {
+            System.out.println((i + 1) + ") Calle: " + domicilios.get(i).getCalle() + ", Colonia: " + domicilios.get(i).getColonia());
+        }
+        int opDom = LeerDatos.pedirEntero("Selecciona el número de domicilio de envío: ") - 1;
+        if (opDom < 0 || opDom >= domicilios.size()) {
+            System.out.println("Selección de domicilio inválida.");
+            return;
+        }
+
+        System.out.println("Medios de pago registrados:");
+        for (int i = 0; i < mediosPago.size(); i++) {
+            System.out.println((i + 1) + ") " + mediosPago.get(i).getDescripcionTicket());
+        }
+        int opPago = LeerDatos.pedirEntero("Selecciona el número de medio de pago: ") - 1;
+        if (opPago < 0 || opPago >= mediosPago.size()) {
+            System.out.println("Selección de medio de pago inválida.");
+            return;
+        }
+
+        MedioDePago medioSeleccionado = mediosPago.get(opPago);
+        if (!medioSeleccionado.confirmarPago()) {
+            System.out.println("Pago rechazado. El pedido no fue confirmado.");
+            return;
+        }
+
+        Pedido pedido = new Pedido(
+                domicilios.get(opDom),
+                medioSeleccionado,
+                cliente.getCarrito().obtenerCopiaProductos()
+        );
+        cliente.getListaPedido().add(pedido);
+        pedido.imprimirPedido(cliente);
+        cliente.getCarrito().vaciarCarrito();
+        System.out.println("Pedido confirmado correctamente. El carrito se ha vaciado.");
+    }
+
+    // Método agregado que muestra pedidos previos y reimprime el ticket .txt del pedido seleccionado
+    private void imprimirTicketHistorico(Cliente cliente) {
+        ArrayList<Pedido> pedidos = cliente.getListaPedido();
+        if (pedidos.isEmpty()) {
+            System.out.println("No tienes pedidos confirmados.");
+            return;
+        }
+        System.out.println("Pedidos confirmados:");
+        for (int i = 0; i < pedidos.size(); i++) {
+            System.out.println((i + 1) + ") " + pedidos.get(i).getResumen(i + 1));
+        }
+        int opPedido = LeerDatos.pedirEntero("Selecciona el número de pedido para reimprimir su ticket: ") - 1;
+        if (opPedido < 0 || opPedido >= pedidos.size()) {
+            System.out.println("Selección de pedido inválida.");
+            return;
+        }
+        pedidos.get(opPedido).imprimirPedido(cliente);
     }
     
+    // Se mantiene el ciclo while con opción 3) Salir para que el administrador permanezca en su menú tras cada operación
     public void menuAdmin(){
-    Admin admin = (Admin) this.usuario;        
-    int op;
+        Admin admin = (Admin) this.usuario;        
+        int op;
         while(true){
-            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\n2)Modificación de precios\n3)Salir");
+            op = LeerDatos.pedirEntero("==Administrador==\n1)Alta de productos\n2)Modificación de precios\n3)Salir\nSeleccione una opción: ");
             switch (op) {
-                case 1: {
-                    System.out.print("Ingresa el nombre del producto:");
-                    String nombre = lector.nextLine();
-                    float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
-                    
-                    if (precio <= 0) {
-                        System.out.println("El precio debe ser mayor a 0");
-                        break;
-                    }
-                     
-                    System.out.print("Ingresa el id: ");
-                    String id = lector.nextLine();
-                    System.out.print("Ingresa la categoría: ");
-                    String categoria = lector.nextLine();
-                    
-                    Producto producto = new Producto.Builder()
-                            .setNombre(nombre)
-                            .setPrecio(precio)
-                            .setId(id)
-                            .setCategoria(categoria)
-                            .build();
-                    
-                     if (admin.agregarProducto(baseDatos, producto)) {
-                        System.out.println("Producto agregado.");
-                    }
-                            
-                    break;
-                    }
-                case 2: {
-                    baseDatos.imprimirProductos();
-                    System.out.println("Ingresa el id del producto a modificar");
-                    String id = lector.nextLine();
-                    float precio = LeerDatos.pedirFlotante("Ingresa el nuevo precio: ");
-                    
-                    admin.cambiarPrecio(baseDatos, id, precio);
+            case 1: {
+                String id = LeerDatos.pedirTexto("Ingresa el id: ");
+                String nombre = LeerDatos.pedirTexto("Ingresa el nombre del producto: ");
+                String categoria = LeerDatos.pedirTexto("Ingresa la categoría: ");
+                float precio = LeerDatos.pedirFlotante("Ingresa el precio: ");
+                
+                // Se agregó validación de campos obligatorios no vacíos
+                if (id.isEmpty() || nombre.isEmpty() || categoria.isEmpty()) {
+                    System.out.println("ID, nombre y categoría son obligatorios.");
                     break;
                 }
-                case 3: 
-                    return;
-                default:
-                    System.out.println("Opción incorrecta");
+                if (precio <= 0) {
+                    System.out.println("El precio debe ser mayor a 0");
+                    break;
+                }
+                
+                Producto producto = new Producto.Builder()
+                        .setNombre(nombre)
+                        .setPrecio(precio)
+                        .setId(id)
+                        .setCategoria(categoria)
+                        .build();
+                
+                if (admin.agregarProducto(baseDatos, producto)) {
+                    System.out.println("Producto agregado.");
+                }
+                        
+                break;
             }
-        
+            case 2: {
+                // Se verifica inventario vacío antes de solicitar ID y se evalúa el retorno de cambiarPrecio() para confirmar el cambio
+                if (baseDatos.inventarioVacio()) {
+                    System.out.println("No hay productos registrados");
+                    break;
+                }
+                baseDatos.imprimirProductos();
+                String id = LeerDatos.pedirTexto("Ingresa el id del producto a modificar: ");
+                float precio = LeerDatos.pedirFlotante("Ingresa el nuevo precio: ");
+                
+                if (admin.cambiarPrecio(baseDatos, id, precio)) {
+                    System.out.println("Precio modificado correctamente.");
+                }
+                break;
+            }
+            case 3: // Permite cerrar sesión y regresar al menú principal cuando el administrador lo indique
+                return;
+            default:
+                System.out.println("Opción incorrecta");
+            }
         }
     }
 }

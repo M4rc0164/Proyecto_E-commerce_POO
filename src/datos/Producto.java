@@ -12,7 +12,6 @@ public class Producto {
     private String id;
     private String categoria;
 
-    // Constructor privado que recibe el Builder
     private Producto(Builder builder) {
         this.nombre = builder.nombre;
         this.precio = builder.precio;
@@ -20,7 +19,6 @@ public class Producto {
         this.categoria = builder.categoria;
     }
 
-    // Clase estática Builder interna
     public static class Builder {
 
         private String nombre;
@@ -48,7 +46,6 @@ public class Producto {
             return this;
         }
 
-        // Método que genera la instancia de la clase original
         public Producto build() {
             if (this.precio <= 0) {
                 throw new IllegalStateException("El precio debe ser mayor a cero");
@@ -73,7 +70,6 @@ public class Producto {
         return categoria;
     }
 
-    // Se agregó validación > 0 para evitar modificar el precio a valores inválidos fuera del Builder
     public void setPrecio(float precio) {
         if (precio <= 0) {
             throw new IllegalArgumentException("El precio debe ser mayor a cero");
@@ -81,7 +77,6 @@ public class Producto {
         this.precio = precio;
     }
 
-    // Se implementaron hashCode y equals por ID para usar Producto como llave en el Map del Carrito y detectar duplicados
     @Override
     public int hashCode() {
         return Objects.hash(this.id);

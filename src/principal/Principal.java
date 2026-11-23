@@ -18,7 +18,7 @@ public class Principal {
             System.out.println("1. Ingresar al sistema");
             System.out.println("2. Registrarse como cliente");
             System.out.println("3. Salir");
-            // Se reemplazó scan.nextInt() por LeerDatos.pedirEntero() 
+            
             opt1 = LeerDatos.pedirEntero("Ingrese la opción deseada: ");
             switch(opt1){
                 case 1:
@@ -28,7 +28,6 @@ public class Principal {
                     registrarCliente();
                     break;
                 case 3:
-                    // Se usa LeerDatos.pedirTexto() para leer la confirmación de forma segura y evitar múltiples Scanner
                     String resp = LeerDatos.pedirTexto("Confirmar salida? S/N: ");
                     if (!resp.isEmpty()) {
                         confirmacion = resp.charAt(0);
@@ -47,7 +46,7 @@ public class Principal {
         String user, contrasena, nombre;
         Usuario usuario;
         
-        // Se usa LeerDatos.pedirTexto() y se agregaron validaciones para impedir usuarios o nombres vacíos
+
         user = LeerDatos.pedirTexto("Ingresa el usuario con el que te vas a registrar: ");
         if (user.isEmpty()) {
             System.out.println("El nombre de usuario no puede estar vacío");

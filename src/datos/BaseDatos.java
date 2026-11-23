@@ -21,7 +21,6 @@ public class BaseDatos {
     private BaseDatos() {
         this.inventario = new ArrayList<>();
         this.usuarios = new ArrayList<>();
-        // Se precargan datos de prueba al crear la base de datos
         this.cargarDatosIniciales();
     }
 
@@ -32,7 +31,6 @@ public class BaseDatos {
         return baseDatos;
     }
 
-    // Carga inicial de administradores, clientes y productos de prueba
     private void cargarDatosIniciales() {
         usuarios.add(new Admin("admin1", "Administrador Principal", "admin123"));
         usuarios.add(new Admin("admin2", "Supervisor Catalogo", "admin456"));
@@ -105,7 +103,6 @@ public class BaseDatos {
         }
     }
 
-    //para buscar usuarios
     public Usuario buscarUsuario(String user){
         for(Usuario u: this.usuarios){
             if(u.getUser().equals(user)){
@@ -116,8 +113,7 @@ public class BaseDatos {
         return null;
     }
     
-    
-    //para imprimir los productos
+
     public void imprimirProductos(){
         if(this.inventario.isEmpty()){
             System.out.println("No hay productos registrados");
@@ -133,7 +129,6 @@ public class BaseDatos {
         }
     }
     
-    //para buscar los productos 
     public Producto buscarProducto(String id){
         for(Producto p : this.inventario){
             if(p.getId().equals(id)){
